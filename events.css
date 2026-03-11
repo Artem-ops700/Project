@@ -1,0 +1,257 @@
+/* Строгий дизайн для страницы соревнований */
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --light: #ecf0f1;
+    --dark: #1a252f;
+    --success: #27ae60;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8fafc;
+    color: var(--primary);
+}
+
+/* Хедер */
+header.bg-light {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+    padding: 3rem 0 !important;
+    border-bottom: 4px solid var(--success);
+}
+
+header h1 {
+    font-weight: 800;
+    font-size: 2.8rem;
+    color: var(--light);
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+}
+
+header .lead {
+    color: rgba(236, 240, 241, 0.9);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Заголовок таблицы */
+main h2 {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+main h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: var(--secondary);
+    border-radius: 2px;
+}
+
+/* Таблица - строгий вид */
+.table-responsive {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+    color: white;
+    font-weight: 700;
+    padding: 1.2rem 1.5rem;
+    border: none;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid var(--secondary);
+}
+
+.table thead th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.table thead th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.table tbody tr {
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-striped tbody tr:nth-of-type(odd):hover {
+    background-color: #f0f7ff;
+}
+
+.table td {
+    padding: 1.2rem 1.5rem;
+    color: var(--primary);
+    font-weight: 500;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Стили для ячеек как кнопок */
+.table td:first-child {
+    font-weight: 700;
+    color: var(--accent);
+    background-color: #fff5f5;
+    border-right: 2px solid #ffebee;
+    min-width: 120px;
+}
+
+.table td:nth-child(2) {
+    font-weight: 600;
+    color: var(--primary);
+    background-color: #f8f9fa;
+    border-right: 2px solid #e9ecef;
+}
+
+.table td:nth-child(3) {
+    color: var(--success);
+    font-weight: 500;
+    background-color: #f0f9f0;
+    border-right: 2px solid #e6f3e6;
+}
+
+.table td:last-child {
+    color: #666;
+    font-style: normal;
+    background-color: #fafafa;
+    font-size: 0.95rem;
+}
+
+/* Кнопочный эффект для строк */
+.table tbody tr {
+    cursor: default;
+    position: relative;
+}
+
+.table tbody tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--light), transparent);
+}
+
+.table tbody tr:hover::after {
+    background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+}
+
+/* Бейдж даты как кнопка */
+.date-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    border: 2px solid var(--accent);
+}
+
+/* Комментарий как кнопка */
+.comment-badge {
+    display: inline-block;
+    background: var(--light);
+    color: var(--primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 2px solid #d5dbdb;
+    margin-top: 0.3rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .table-responsive {
+        border-radius: 8px;
+        border-width: 1px;
+    }
+
+    .table thead th {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .table td {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    header h1 {
+        font-size: 2.2rem;
+    }
+
+    main h2 {
+        font-size: 1.8rem;
+        padding-left: 1rem;
+    }
+}
+
+/* Анимация появления строк */
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.table tbody tr {
+    animation: fadeInRow 0.4s ease-out forwards;
+}
+
+.table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+
+/* Иконки для таблицы (опционально) */
+.table td:first-child::before {
+    content: '📅';
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.table td:nth-child(3)::before {
+    content: '📍';
+    margin-right: 8px;
+    opacity: 0.7;
+}

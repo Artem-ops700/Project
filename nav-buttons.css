@@ -1,0 +1,245 @@
+/* Стили для существующих навигационных ссылок в виде красивых кнопок */
+.navbar-nav {
+    gap: 10px;
+}
+
+.nav-link {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    color: white !important;
+    border: 2px solid #3498db;
+    border-radius: 10px;
+    padding: 10px 24px !important;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 130px;
+    text-align: center;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+}
+
+.nav-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    border-color: #fff;
+    color: white !important;
+}
+
+.nav-link.active {
+    border-color: #fff
+.nav-link::before {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+}
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 4px;
+    background: white;
+    border-radius: 2px;
+     border-color: #fff
+}
+
+/* Эффект пульсации для активной кнопки */
+@keyframes pulseActiveNav {
+    0% {
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+    }
+    50% {
+        box-shadow: 0 6px 25px rgba(231, 76, 60, 0.8);
+    }
+    100% {
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+    }
+}
+
+.nav-link.active {
+    opacity: 1;
+box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+ border-color: #fff
+}
+
+/* Эффект свечения при наведении */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #3498db, #2c3e50, #e74c3c);
+    border-radius: 12px;
+    z-index: -2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link:hover::after {
+    opacity: 0.5;
+}
+
+/* Иконки для навигационных ссылок */
+.nav-link[href="index.html"]::before {
+    content: '🏠 ';
+}
+
+.nav-link[href="team.html"]::before {
+    content: '👥 ';
+}
+
+.nav-link[href="events.html"]::before {
+    content: '📅 ';
+}
+
+/* Стили для навигационной панели */
+.navbar {
+    background: linear-gradient(135deg, #1a252f, #2c3e50) !important;
+    border-bottom: 3px solid #3498db;
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+    padding: 10px 0;
+}
+
+.navbar-brand::before {
+    content: '🎿 ';
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 992px) {
+    .navbar-nav {
+        margin-top: 15px;
+        gap: 8px;
+    }
+
+    .nav-link {
+        padding: 8px 20px !important;
+        min-width: 120px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .navbar-nav {
+        gap: 6px;
+    }
+
+    .nav-link {
+        padding: 7px 16px !important;
+        min-width: 110px;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+
+    .navbar-brand {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-link {
+        padding: 6px 12px !important;
+        min-width: 100px;
+        font-size: 0.85rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+/* Анимация появления кнопок */
+@keyframes fadeInNavButtons {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-item:nth-child(1) .nav-link { animation: fadeInNavButtons 0.3s ease-out; }
+.nav-item:nth-child(2) .nav-link { animation: fadeInNavButtons 0.4s ease-out; }
+.nav-item:nth-child(3) .nav-link { animation: fadeInNavButtons 0.5s ease-out; }
+
+/* Отступы между кнопками в навигации */
+.nav-item {
+    margin: 0 2px;
+}
+
+/* Убираем стандартное подчеркивание Bootstrap */
+.nav-link:focus, .nav-link:active {
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5) !important;
+}
+/* Исправление для отображения кнопок в строку */
+.navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-item {
+    display: inline-block !important;
+    margin: 0 !important;
+    float: none !important;
+}
+
+.nav-link {
+    display: inline-block !important;
+    white-space: nowrap;
+}
+
+/* Для мобильного меню (бургер) */
+.navbar-collapse {
+    justify-content: flex-end !important;
+}
+
+/* Убираем отступы Bootstrap по умолчанию */
+.navbar-nav .nav-link {
+    padding-right: var(--bs-navbar-nav-link-padding-x);
+    padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+
+/* Убедимся, что контейнер правильно отображает элементы */
+.navbar > .container,
+.navbar > .container-fluid {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+}

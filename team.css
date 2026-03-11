@@ -1,0 +1,177 @@
+/* Строгий дизайн для страницы состава */
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --light: #ecf0f1;
+    --dark: #1a252f;
+    --gray: #95a5a6;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+/* Хедер */
+header.bg-light {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+    padding: 3rem 0 !important;
+    border-bottom: 4px solid var(--secondary);
+}
+
+header h1 {
+    font-weight: 800;
+    font-size: 2.8rem;
+    color: var(--light);
+    letter-spacing: -1px;
+}
+
+/* Заголовки карточек */
+.card-title {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 3px solid var(--secondary);
+    display: inline-block;
+}
+
+/* Карточки - строгий дизайн */
+.card {
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    overflow: hidden;
+}
+
+.card:hover {
+    border-color: var(--secondary);
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.1);
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Группы как кнопки */
+.text-muted {
+    background-color: var(--light);
+    color: var(--primary) !important;
+    font-weight: 700;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0 1rem;
+    display: inline-block;
+    border: 2px solid #d5dbdb;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+/* Списки спортсменов - кнопочный вид */
+.list-group-item {
+    background: none;
+    border: 2px solid #edf2f7;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    color: var(--primary);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.list-group-item:hover {
+    background-color: var(--light);
+    border-color: var(--secondary);
+    transform: translateX(5px);
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Специальная карточка */
+.card:last-child {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
+}
+
+.card:last-child .card-title {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.card:last-child .card-text {
+    color: #666;
+    font-weight: 500;
+    line-height: 1.8;
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #ffeaea;
+}
+
+/* Кнопки группировки */
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.group-badge {
+    background-color: var(--secondary);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Анимации */
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.row > div {
+    animation: cardAppear 0.5s ease-out forwards;
+}
+
+.row > div:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    header h1 {
+        font-size: 2.2rem;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+    }
+}
+
+/* Цветовые акценты для групп */
+.mb-2:first-of-type { background-color: #e3f2fd; border-color: #bbdefb; }
+.mb-2:nth-of-type(2) { background-color: #e8f5e9; border-color: #c8e6c9; }
+.mb-2:nth-of-type(3) { background-color: #fff3e0; border-color: #ffe0b2; }
+.mb-2:nth-of-type(4) { background-color: #f3e5f5; border-color: #e1bee7; }
+.mb-2:nth-of-type(5) { background-color: #e0f7fa; border-color: #b2ebf2; }
