@@ -46,10 +46,11 @@
 }
 
 .nav-link.active {
-    border-color: #fff
-.nav-link::before {
-    background: linear-gradient(145deg, #3498db, #2980b9);
+    border-color: #fff;
 }
+
+.nav-link.active::before {
+    background: linear-gradient(145deg, #3498db, #2980b9);
 }
 
 .nav-link.active::after {

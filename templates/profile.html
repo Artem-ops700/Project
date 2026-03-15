@@ -1,0 +1,901 @@
+{% extends "base.html" %}
+
+{% block title %}Лыжные гонки — Мой профиль{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Контрастный дизайн в стиле главной страницы */
+    .profile-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        padding: 3rem 0;
+    }
+
+    /* Декоративные элементы как на главной */
+    .profile-body::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .profile-body::after {
+        content: '⛷️';
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 150px;
+        opacity: 0.05;
+        transform: rotate(-15deg);
+        pointer-events: none;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-50px) rotate(5deg); }
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Карточка профиля */
+    .profile-card {
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        position: relative;
+        border: 3px solid #3498db;
+        animation: cardAppear 0.6s ease-out;
+    }
+
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Декоративная полоса сверху */
+    .profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #3498db, #e74c3c, #3498db);
+        background-size: 200% 100%;
+        animation: gradientMove 3s linear infinite;
+        z-index: 1;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
+    /* Шапка профиля */
+    .profile-header {
+        background: linear-gradient(135deg, #2c3e50, #1a252f);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        border-bottom: 4px solid #3498db;
+    }
+
+    /* Аватар */
+    .profile-avatar {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        border: 5px solid #3498db;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        border-color: #e74c3c;
+    }
+
+    .profile-avatar:hover::after {
+        content: '✏️';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #3498db;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        border: 2px solid white;
+    }
+
+    .profile-name {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .profile-email {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* Тело профиля */
+    .profile-content {
+        padding: 2.5rem;
+        background: white;
+    }
+
+    /* Навигация по вкладкам */
+    .profile-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 0.5rem;
+    }
+
+    .profile-tab {
+        padding: 0.8rem 1.5rem;
+        font-weight: 700;
+        color: #7f8c8d;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .profile-tab i {
+        font-size: 1.2rem;
+    }
+
+    .profile-tab:hover {
+        color: #3498db;
+        background: rgba(52, 152, 219, 0.05);
+    }
+
+    .profile-tab.active {
+        color: #3498db;
+        border-bottom: 3px solid #3498db;
+    }
+
+    /* Секции профиля */
+    .profile-section {
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .profile-section.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Заголовки секций */
+    .section-title {
+        color: #2c3e50;
+        font-weight: 800;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .section-title i {
+        color: #3498db;
+        font-size: 1.4rem;
+    }
+
+    /* Группы полей */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+    .form-label i {
+        color: #3498db;
+        width: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 1rem 1.2rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+        background: white;
+        transform: translateY(-2px);
+    }
+
+    .form-control:hover {
+        border-color: #3498db;
+    }
+
+    .form-control[readonly] {
+        background: #e9ecef;
+        cursor: not-allowed;
+    }
+
+    /* Переключатели */
+    .toggle-group {
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-group:hover {
+        border-color: #3498db;
+        transform: translateX(5px);
+    }
+
+    .toggle-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+    .toggle-item:not(:last-child) {
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .toggle-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .toggle-info i {
+        font-size: 1.3rem;
+        color: #3498db;
+        width: 30px;
+    }
+
+    .toggle-text {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .toggle-description {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        margin-top: 2px;
+    }
+
+    /* Стилизованный переключатель */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 30px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #3498db;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(30px);
+    }
+
+    /* Кнопки */
+    .btn-save {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(44, 62, 80, 0.3);
+    }
+
+    .btn-save::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(52, 152, 219, 0.4);
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .btn-save:hover::before {
+        left: 100%;
+    }
+
+    .btn-cancel {
+        background: white;
+        color: #7f8c8d;
+        border: 2px solid #e0e0e0;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-cancel:hover {
+        border-color: #e74c3c;
+        color: #e74c3c;
+        transform: translateY(-2px);
+    }
+
+    .btn-edit {
+        background: none;
+        border: none;
+        color: #3498db;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background: rgba(52, 152, 219, 0.1);
+        color: #e74c3c;
+    }
+
+    /* Информационные блоки */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-card {
+        background: #f8fafc;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        border-color: #3498db;
+        transform: translateY(-5px);
+    }
+
+    .info-card-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .info-card-value {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Статистика */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 15px;
+        border: 2px solid #e0e0e0;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #3498db;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+    }
+
+    /* Кнопка выхода */
+    .logout-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e0e0e0;
+        text-align: center;
+    }
+
+    .btn-logout {
+        background: none;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-logout:hover {
+        background: #e74c3c;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .profile-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+        }
+
+        .profile-content {
+            padding: 1.8rem;
+        }
+
+        .profile-tabs {
+            flex-wrap: wrap;
+        }
+
+        .profile-tab {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 3rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Уведомления */
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: slideDown 0.4s ease;
+        border: 2px solid transparent;
+        font-weight: 600;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .alert-success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-body">
+    <div class="profile-container">
+        <div class="profile-card">
+            <!-- Шапка профиля -->
+            <div class="profile-header">
+                <div class="profile-avatar" onclick="changeAvatar()">
+                    ⛷️
+                </div>
+                <h1 class="profile-name">{{ session.username }}</h1>
+                <p class="profile-email">{{ session.email }}</p>
+            </div>
+
+            <!-- Тело профиля -->
+            <div class="profile-content">
+                <!-- Уведомления -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Вкладки -->
+                <div class="profile-tabs">
+                    <div class="profile-tab active" onclick="switchTab('info')">
+                        <i class="fas fa-user"></i> Основное
+                    </div>
+                    <div class="profile-tab" onclick="switchTab('notifications')">
+                        <i class="fas fa-bell"></i> Уведомления
+                    </div>
+                    <div class="profile-tab" onclick="switchTab('security')">
+                        <i class="fas fa-shield-alt"></i> Безопасность
+                    </div>
+                </div>
+
+                <!-- Секция: Основная информация -->
+                <div id="info-section" class="profile-section active">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-circle"></i> Личная информация
+                    </h3>
+
+                    <form method="POST" action="{{ url_for('update_profile') }}">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user"></i> Имя пользователя
+                            </label>
+                            <input type="text" class="form-control" name="username" value="{{ user[1] }}" placeholder="Ваше имя">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" class="form-control" name="email" value="{{ user[2] }}" placeholder="Ваш email">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-birthday-cake"></i> Дата рождения
+                            </label>
+                            <input type="date" class="form-control" name="birth_date" value="{{ user[4] or '' }}">
+                        </div>
+
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Сохранить изменения
+                        </button>
+                    </form>
+
+                    <!-- Статистика -->
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Соревнований</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Комментария</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2024</div>
+                            <div class="stat-label">С нами</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Секция: Уведомления -->
+                <div id="notifications-section" class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-bell"></i> Настройки уведомлений
+                    </h3>
+
+                    <form method="POST" action="{{ url_for('update_notifications') }}">
+                        <div class="toggle-group">
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <i class="fas fa-newspaper"></i>
+                                    <div>
+                                        <div class="toggle-text">Новости о соревнованиях</div>
+                                        <div class="toggle-description">Получать новости о предстоящих стартах</div>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="news_notifications" {% if user[6] %}checked{% endif %}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                    <div>
+                                        <div class="toggle-text">Email-уведомления</div>
+                                        <div class="toggle-description">Получать уведомления на почту</div>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="email_notifications" {% if user[7] %}checked{% endif %}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <div>
+                                        <div class="toggle-text">Напоминания о стартах</div>
+                                        <div class="toggle-description">За день до соревнований</div>
+                                    </div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" name="reminders" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Сохранить настройки
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Секция: Безопасность -->
+                <div id="security-section" class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-shield-alt"></i> Безопасность
+                    </h3>
+
+                    <form method="POST" action="{{ url_for('change_password') }}">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-lock"></i> Текущий пароль
+                            </label>
+                            <input type="password" class="form-control" name="current_password" required placeholder="Введите текущий пароль">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-lock"></i> Новый пароль
+                            </label>
+                            <input type="password" class="form-control" name="new_password" required minlength="6" placeholder="Введите новый пароль">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Минимум 6 символов
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-lock"></i> Подтвердите новый пароль
+                            </label>
+                            <input type="password" class="form-control" name="confirm_password" required placeholder="Повторите новый пароль">
+                        </div>
+
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-key"></i> Изменить пароль
+                        </button>
+                    </form>
+
+                    <!-- Дополнительная информация -->
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-label">
+                                <i class="fas fa-calendar-check"></i> Последний вход
+                            </div>
+                            <div class="info-card-value">15 марта 2025</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label">
+                                <i class="fas fa-clock"></i> Аккаунт создан
+                            </div>
+                            <div class="info-card-value">{{ user[8] }}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label">
+                                <i class="fas fa-shield-alt"></i> Статус
+                            </div>
+                            <div class="info-card-value" style="color: #27ae60;">✓ Активен</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка выхода -->
+                <div class="logout-section">
+                    <a href="{{ url_for('logout') }}" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Выйти из аккаунта
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Переключение вкладок
+function switchTab(tabName) {
+    // Скрываем все секции
+    document.querySelectorAll('.profile-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Убираем активный класс со всех вкладок
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Показываем выбранную секцию
+    document.getElementById(tabName + '-section').classList.add('active');
+
+    // Активируем выбранную вкладку
+    event.target.closest('.profile-tab').classList.add('active');
+}
+
+// Смена аватара
+function changeAvatar() {
+    alert('🖼️ Функция смены аватара будет доступна позже');
+}
+
+// Подтверждение выхода
+document.querySelector('.btn-logout').addEventListener('click', function(e) {
+    if (!confirm('Вы уверены, что хотите выйти?')) {
+        e.preventDefault();
+    }
+});
+
+// Валидация формы смены пароля
+document.querySelector('#security-section form').addEventListener('submit', function(e) {
+    const newPass = this.querySelector('[name="new_password"]').value;
+    const confirmPass = this.querySelector('[name="confirm_password"]').value;
+
+    if (newPass !== confirmPass) {
+        e.preventDefault();
+        alert('❌ Новые пароли не совпадают');
+    }
+
+    if (newPass.length < 6) {
+        e.preventDefault();
+        alert('❌ Пароль должен быть не менее 6 символов');
+    }
+});
+</script>
+{% endblock %}

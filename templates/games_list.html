@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Лыжные гонки — Прогнозы на соревнования{% endblock %}
+
+{% block extra_css %}
+<style>
+    .games-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        padding: 3rem 0;
+    }
+
+    .games-body::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-50px) rotate(5deg); }
+    }
+
+    .games-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .games-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .games-header h1 {
+        color: white;
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .games-header p {
+        color: rgba(255,255,255,0.8);
+        font-size: 1.2rem;
+    }
+
+    .game-card {
+        background: white;
+        border-radius: 20px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        border: 3px solid #3498db;
+        transition: all 0.3s ease;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(52,152,219,0.3);
+    }
+
+    .game-status {
+        padding: 0.5rem 1.5rem;
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .status-upcoming { background: #3498db; }
+    .status-active { background: #27ae60; }
+    .status-finished { background: #7f8c8d; }
+
+    .game-content {
+        padding: 1.5rem;
+    }
+
+    .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .game-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    .game-date {
+        color: #7f8c8d;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .game-place {
+        color: #3498db;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .game-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid #e0e0e0;
+    }
+
+    .btn-predict {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .btn-predict:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(52,152,219,0.3);
+        color: white;
+    }
+
+    .btn-results {
+        background: white;
+        color: #2c3e50;
+        border: 2px solid #3498db;
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-results:hover {
+        background: #3498db;
+        color: white;
+    }
+
+    .prediction-made {
+        background: #27ae60;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .results {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .podium {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+    }
+
+    .podium-place {
+        text-align: center;
+    }
+
+    .podium-place .medal {
+        font-size: 1.5rem;
+        font-weight: 800;
+    }
+
+    .podium-place .athlete {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .no-games {
+        text-align: center;
+        padding: 4rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        color: white;
+    }
+
+    .rating-link {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .rating-link a {
+        color: white;
+        background: rgba(255,255,255,0.1);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
+        border: 2px solid #3498db;
+        transition: all 0.3s ease;
+    }
+
+    .rating-link a:hover {
+        background: #3498db;
+        transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+        .game-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .podium {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="games-body">
+    <div class="games-container">
+        <div class="games-header">
+            <h1>🎯 Угадай победителя</h1>
+            <p>Делайте прогнозы на соревнования и зарабатывайте баллы для рейтинга</p>
+        </div>
+
+        <!-- Ссылка на рейтинг -->
+        <div class="rating-link">
+            <a href="{{ url_for('rating') }}">
+                <i class="fas fa-trophy"></i> Смотреть рейтинг болельщиков
+            </a>
+        </div>
+
+        {% if games %}
+            {% for game in games %}
+                <div class="game-card">
+                    <div class="game-status status-{{ game[6] }}">
+                        {% if game[6] == 'upcoming' %}⏳ Скоро
+                        {% elif game[6] == 'active' %}🔥 Прием прогнозов
+                        {% else %}🏁 Завершено{% endif %}
+                    </div>
+
+                    <div class="game-content">
+                        <div class="game-header">
+                            <h2 class="game-title">{{ game[2] }}</h2>
+                            <div class="game-date">
+                                <i class="fas fa-calendar-alt"></i> {{ game[3] }}
+                            </div>
+                        </div>
+
+                        <div class="game-place">
+                            <i class="fas fa-map-marker-alt"></i> {{ game[4] }}
+                        </div>
+
+                        {% if game[6] == 'finished' and game[7] %}
+                            <div class

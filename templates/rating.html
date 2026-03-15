@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Лыжные гонки — Рейтинг болельщиков{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Контрастный дизайн в стиле главной страницы */
+    .rating-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        padding: 3rem 0;
+    }
+
+    .rating-body::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-50px) rotate(5deg); }
+    }
+
+    .rating-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .rating-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .rating-header h1 {
+        color: white;
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .rating-header p {
+        color: rgba(255,255,255,0.8);
+        font-size: 1.2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 3px solid #3498db;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(52,152,219,0.3);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2c3e50;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .user-rank-card {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        border-radius: 50px;
+        padding: 1rem 2rem;
+        margin-bottom: 2rem;
+        display: inline-block;
+        font-weight: 700;
+        border: 2px solid white;
+    }
+
+    .rating-table {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 3px solid #3498db;
+    }
+
+    .rating-row {
+        display: grid;
+        grid-template-columns: 80px 1fr 100px 100px 120px;
+        padding: 1rem;
+        border-bottom: 1px solid #e0e0e0;
+        align-items: center;
+    }
+
+    .rating-row.header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        font-weight: 700;
+        border-bottom: none;
+    }
+
+    .rating-row.top-1 {
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+    }
+
+    .rating-row.top-2 {
+        background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    }
+
+    .rating-row.top-3 {
+        background: linear-gradient(135deg, #cd7f32, #e6a756);
+    }
+
+    .rank {
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+
+    .username {
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .points {
+        font-weight: 800;
+        color: #3498db;
+    }
+
+    .accuracy {
+        font-weight: 600;
+        color: #27ae60;
+    }
+
+    .rank-badge {
+        background: #3498db;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .top-1 .rank-badge { background: #ffd700; color: #2c3e50; }
+    .top-2 .rank-badge { background: #c0c0c0; color: #2c3e50; }
+    .top-3 .rank-badge { background: #cd7f32; color: white; }
+
+    .how-to-earn {
+        margin-top: 3rem;
+    }
+
+    .how-to-earn h3 {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .earn-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .earn-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        border-left: 5px solid #3498db;
+        transition: all 0.3s ease;
+    }
+
+    .earn-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .earn-card h4 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .earn-card p {
+        color: #7f8c8d;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .rating-row {
+            grid-template-columns: 50px 1fr 80px 80px 100px;
+            font-size: 0.9rem;
+            padding: 0.8rem;
+        }
+
+        .rating-row.header {
+            display: none;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .rating-row {
+            grid-template-columns: 40px 1fr;
+            grid-template-rows: auto auto;
+            gap: 0.5rem;
+        }
+
+        .points, .accuracy, .rank-badge {
+            grid-column: span 2;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="rating-body">
+    <div class="rating-container">
+        <div class="rating-header">
+            <h1>🏆 Рейтинг болельщиков</h1>
+            <p>Соревнуйтесь с другими фанатами, делайте прогнозы и зарабатывайте баллы</p>
+        </div>
+
+        <!-- Статистика -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ total_users }}</div>
+                <div class="stat-label">Болельщиков</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ total_points }}</div>
+                <div class="stat-label">Всего баллов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">🏅</div>
+                <div class="stat-label">Игр в сезоне</div>
+            </div>
+        </div>
+
+        <!-- Место пользователя -->
+        {% if session.get('user_id') and user_rank %}
+            <div class="user-rank-card">
+                <i class="fas fa-crown"></i> Ваше место в рейтинге: #{{ user_rank }}
+            </div>
+        {% endif %}
+
+        <!-- Таблица рейтинга -->
+        <div class="rating-table">
+            <div class="rating-row header">
+                <div>Место</div>
+                <div>Болельщик</div>
+                <div>Баллы</div>
+                <div>Точность</div>
+                <div>Ранг</div>
+            </div>
+
+            {% for user in top_users %}
+                <div class="rating-row {% if loop.index == 1 %}top-1{% elif loop.index == 2 %}top-2{% elif loop.index == 3 %}top-3{% endif %}">
+                    <div class="rank">#{{ loop.index }}</div>
+                    <div class="username">{{ user[0] }}</div>
+                    <div class="points">{{ user[1] }} баллов</div>
+                    <div class="accuracy">
+                        {% if user[3] > 0 %}
+                            {{ (user[2] / user[3] * 100)|int }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </div>
+                    <div class="rank-badge">{{ user[4] }}</div>
+                </div>
+            {% endfor %}
+
+            {% if not top_users %}
+                <div class="rating-row" style="text-align: center; padding: 2rem;">
+                    <div style="grid-column: span 5;">Пока нет участников с баллами. Сделайте первый прогноз!</div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Как зарабатывать баллы -->
+        <div class="how-to-earn">
+            <h3>📊 Как заработать баллы?</h3>
+            <div class="earn-grid">
+                <div class="earn-card">
+                    <h4>🏆 Победитель</h4>
+                    <p>+10 баллов за угаданного победителя</p>
+                </div>
+                <div class="earn-card">
+                    <h4>🥈 Второе место</h4>
+                    <p>+5 баллов за угаданное второе место</p>
+                </div>
+                <div class="earn-card">
+                    <h4>🥉 Третье место</h4>
+                    <p>+3 балла за угаданное третье место</p>
+                </div>
+                <div class="earn-card">
+                    <h4>🎯 Точный подиум</h4>
+                    <p>+20 баллов за полное совпадение</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка перехода к играм -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{{ url_for('games_list') }}" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                <i class="fas fa-gamepad"></i> Перейти к прогнозам
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
