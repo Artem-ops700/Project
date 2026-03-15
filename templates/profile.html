@@ -167,6 +167,7 @@
         margin-bottom: 2rem;
         border-bottom: 2px solid #e0e0e0;
         padding-bottom: 0.5rem;
+        flex-wrap: wrap;
     }
 
     .profile-tab {
@@ -555,6 +556,68 @@
         box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
     }
 
+    /* Стили для рейтинга (ДОБАВЛЕНО) */
+    .rating-status-card {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        border: 3px solid #ffd700;
+    }
+
+    .rating-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 2px solid #3498db;
+        margin-bottom: 2rem;
+    }
+
+    .rating-table .header {
+        display: grid;
+        grid-template-columns: 60px 1fr 100px 120px;
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 1rem;
+        font-weight: 700;
+    }
+
+    .rating-row {
+        display: grid;
+        grid-template-columns: 60px 1fr 100px 120px;
+        padding: 1rem;
+        border-bottom: 1px solid #e0e0e0;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .rating-row:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+    }
+
+    .rating-row.top-1 {
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+    }
+
+    .rating-row.top-2 {
+        background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    }
+
+    .rating-row.top-3 {
+        background: linear-gradient(135deg, #cd7f32, #e6a756);
+    }
+
+    .rank-badge {
+        background: #3498db;
+        color: white;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
     /* Адаптивность */
     @media (max-width: 768px) {
         .profile-header {
@@ -581,6 +644,11 @@
         .stats-grid {
             grid-template-columns: 1fr;
         }
+
+        .rating-row {
+            grid-template-columns: 50px 1fr 80px 100px;
+            font-size: 0.9rem;
+        }
     }
 
     @media (max-width: 576px) {
@@ -592,6 +660,17 @@
 
         .info-grid {
             grid-template-columns: 1fr;
+        }
+
+        .rating-row {
+            grid-template-columns: 40px 1fr;
+            grid-template-rows: auto auto;
+            gap: 0.5rem;
+        }
+
+        .rating-row .points,
+        .rating-row .rank-badge {
+            grid-column: span 2;
         }
     }
 
@@ -660,7 +739,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <!-- Вкладки -->
+                <!-- Вкладки (ОБНОВЛЕНО - добавлена вкладка рейтинга) -->
                 <div class="profile-tabs">
                     <div class="profile-tab active" onclick="switchTab('info')">
                         <i class="fas fa-user"></i> Основное
@@ -670,6 +749,9 @@
                     </div>
                     <div class="profile-tab" onclick="switchTab('security')">
                         <i class="fas fa-shield-alt"></i> Безопасность
+                    </div>
+                    <div class="profile-tab" onclick="switchTab('rating')">
+                        <i class="fas fa-trophy"></i> Мой рейтинг
                     </div>
                 </div>
 
@@ -839,6 +921,105 @@
                     </div>
                 </div>
 
+                <!-- НОВАЯ СЕКЦИЯ: Рейтинг и достижения -->
+                <div id="rating-section" class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-trophy"></i> Мой рейтинг и достижения
+                    </h3>
+
+                    <!-- Текущий статус пользователя -->
+                    <div class="rating-status-card">
+                        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                            <div style="font-size: 3rem;">🏆</div>
+                            <div>
+                                <h4 style="margin: 0; color: white;">Ваш рейтинг</h4>
+                                <div style="font-size: 2rem; font-weight: 800; margin: 0.5rem 0;" id="user-points">0 баллов</div>
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <span style="background: rgba(255,255,255,0.2); padding: 0.3rem 1rem; border-radius: 50px;" id="user-rank">Новичок</span>
+                                    <span style="background: rgba(255,255,255,0.2); padding: 0.3rem 1rem; border-radius: 50px;" id="user-predictions">0 прогнозов</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Таблица рейтинга -->
+                    <h4 style="color: #2c3e50; margin-bottom: 1rem;">🏆 Топ-10 болельщиков</h4>
+                    <div class="rating-table">
+                        <!-- Заголовок -->
+                        <div class="header">
+                            <div>Место</div>
+                            <div>Болельщик</div>
+                            <div>Баллы</div>
+                            <div>Звание</div>
+                        </div>
+
+                        <!-- Здесь будут данные из JavaScript -->
+                        <div id="rating-list">
+                            <div style="grid-column: span 4; text-align: center; padding: 2rem;">Загрузка...</div>
+                        </div>
+                    </div>
+
+                    <!-- Шкала званий -->
+                    <h4 style="color: #2c3e50; margin-bottom: 1rem;">📊 Шкала званий</h4>
+                    <div style="background: #f8fafc; border-radius: 15px; padding: 1.5rem; border: 2px solid #3498db;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 10px;">
+                                <div style="font-size: 2rem;">🌱</div>
+                                <div style="font-weight: 700;">Новичок</div>
+                                <div style="color: #7f8c8d;">0-49 баллов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 10px;">
+                                <div style="font-size: 2rem;">⭐</div>
+                                <div style="font-weight: 700;">Любитель</div>
+                                <div style="color: #7f8c8d;">50-199 баллов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 10px;">
+                                <div style="font-size: 2rem;">🏅</div>
+                                <div style="font-weight: 700;">Опытный</div>
+                                <div style="color: #7f8c8d;">200-499 баллов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 10px;">
+                                <div style="font-size: 2rem;">🏆</div>
+                                <div style="font-weight: 700;">Профессионал</div>
+                                <div style="color: #7f8c8d;">500-999 баллов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #ffd700, #ffed4e); border-radius: 10px;">
+                                <div style="font-size: 2rem;">👑</div>
+                                <div style="font-weight: 700;">Легенда</div>
+                                <div style="color: #2c3e50;">1000+ баллов</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Как заработать баллы -->
+                    <h4 style="color: #2c3e50; margin: 2rem 0 1rem;">🎯 Как заработать баллы?</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="background: #f8fafc; border-radius: 10px; padding: 1rem; border-left: 5px solid #3498db;">
+                            <h5 style="margin: 0 0 0.5rem;">🏆 Угадать победителя</h5>
+                            <p style="margin: 0; color: #7f8c8d;">+10 баллов</p>
+                        </div>
+                        <div style="background: #f8fafc; border-radius: 10px; padding: 1rem; border-left: 5px solid #3498db;">
+                            <h5 style="margin: 0 0 0.5rem;">🥈 Угадать 2-е место</h5>
+                            <p style="margin: 0; color: #7f8c8d;">+5 баллов</p>
+                        </div>
+                        <div style="background: #f8fafc; border-radius: 10px; padding: 1rem; border-left: 5px solid #3498db;">
+                            <h5 style="margin: 0 0 0.5rem;">🥉 Угадать 3-е место</h5>
+                            <p style="margin: 0; color: #7f8c8d;">+3 балла</p>
+                        </div>
+                        <div style="background: #f8fafc; border-radius: 10px; padding: 1rem; border-left: 5px solid #e74c3c;">
+                            <h5 style="margin: 0 0 0.5rem;">🎯 Точный подиум</h5>
+                            <p style="margin: 0; color: #7f8c8d;">+20 баллов</p>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка перехода к прогнозам -->
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="/games" class="btn-save" style="display: inline-block; padding: 1rem 2rem; text-decoration: none;">
+                            <i class="fas fa-gamepad"></i> Сделать прогноз
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Кнопка выхода -->
                 <div class="logout-section">
                     <a href="{{ url_for('logout') }}" class="btn-logout">
@@ -851,7 +1032,7 @@
 </div>
 
 <script>
-// Переключение вкладок
+// Переключение вкладок (ОБНОВЛЕНО - добавлена загрузка рейтинга)
 function switchTab(tabName) {
     // Скрываем все секции
     document.querySelectorAll('.profile-section').forEach(section => {
@@ -868,6 +1049,11 @@ function switchTab(tabName) {
 
     // Активируем выбранную вкладку
     event.target.closest('.profile-tab').classList.add('active');
+
+    // Если выбрана вкладка рейтинга, загружаем данные
+    if (tabName === 'rating') {
+        loadRating();
+    }
 }
 
 // Смена аватара
@@ -895,6 +1081,67 @@ document.querySelector('#security-section form').addEventListener('submit', func
     if (newPass.length < 6) {
         e.preventDefault();
         alert('❌ Пароль должен быть не менее 6 символов');
+    }
+});
+
+// НОВАЯ ФУНКЦИЯ: Загрузка рейтинга
+function loadRating() {
+    fetch('/api/top-users')
+        .then(response => response.json())
+        .then(data => {
+            // Обновляем информацию о пользователе
+            if (data.current_user) {
+                document.getElementById('user-points').textContent = data.current_user.points + ' баллов';
+                document.getElementById('user-rank').textContent = data.current_user.rank;
+                document.getElementById('user-predictions').textContent = data.current_user.predictions + ' прогнозов';
+            }
+
+            // Строим таблицу рейтинга
+            const ratingList = document.getElementById('rating-list');
+            ratingList.innerHTML = '';
+
+            data.top_users.forEach((user, index) => {
+                const row = document.createElement('div');
+                row.className = 'rating-row';
+                if (index === 0) row.classList.add('top-1');
+                if (index === 1) row.classList.add('top-2');
+                if (index === 2) row.classList.add('top-3');
+
+                // Определяем иконку для звания
+                let rankIcon = '';
+                if (user.rank === 'Новичок') rankIcon = '🌱';
+                else if (user.rank === 'Любитель') rankIcon = '⭐';
+                else if (user.rank === 'Опытный') rankIcon = '🏅';
+                else if (user.rank === 'Профессионал') rankIcon = '🏆';
+                else if (user.rank === 'Легенда') rankIcon = '👑';
+
+                row.innerHTML = `
+                    <div style="font-weight: 800;">#${index + 1}</div>
+                    <div style="font-weight: 600;">${user.username}</div>
+                    <div style="font-weight: 700; color: #3498db;">${user.points}</div>
+                    <div><span class="rank-badge">${rankIcon} ${user.rank}</span></div>
+                `;
+
+                ratingList.appendChild(row);
+            });
+
+            // Если нет пользователей
+            if (data.top_users.length === 0) {
+                ratingList.innerHTML = '<div style="grid-column: span 4; text-align: center; padding: 2rem;">Пока нет участников с баллами</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки рейтинга:', error);
+            document.getElementById('rating-list').innerHTML = '<div style="grid-column: span 4; text-align: center; padding: 2rem; color: #e74c3c;">Ошибка загрузки рейтинга</div>';
+        });
+}
+
+// Загружаем рейтинг при загрузке страницы (если активна вкладка рейтинга)
+document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, активна ли вкладка рейтинга
+    const activeTab = document.querySelector('.profile-tab.active');
+    if (activeTab && activeTab.textContent.includes('Мой рейтинг')) {
+        loadRating();
     }
 });
 </script>
