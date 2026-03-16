@@ -136,7 +136,6 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("✅ Расширенная база данных инициализирована")
 
 
 def init_games():
@@ -166,9 +165,6 @@ def init_games():
             ''', game)
 
         conn.commit()
-        print("✅ Игры добавлены в базу данных с множителями")
-    else:
-        print("✅ Игры уже есть в базе данных")
 
     conn.close()
 
@@ -216,7 +212,6 @@ def init_achievements():
 
     conn.commit()
     conn.close()
-    print("✅ Список достижений инициализирован")
 
 
 # ============ НОВЫЕ ФУНКЦИИ ДЛЯ РАБОТЫ С БАЛЛАМИ ============
@@ -1102,14 +1097,6 @@ if __name__ == '__main__':
     os.makedirs('templates', exist_ok=True)
     os.makedirs('templates/news', exist_ok=True)
 
-    print("=" * 60)
-    print("✅ СЕРВЕР ЗАПУЩЕН С РАСШИРЕННОЙ БАЗОЙ ДАННЫХ!")
-    print("=" * 60)
-    print("🌐 Главная: http://127.0.0.1:5010/")
-    print("📊 Рейтинг: http://127.0.0.1:5010/rating")
-    print("🎮 Прогнозы: http://127.0.0.1:5010/games")
-    print("🏆 Достижения: http://127.0.0.1:5010/achievements")
-    print("📈 Статистика: http://127.0.0.1:5010/stats")
-    print("=" * 60)
+
 
     app.run(debug=True, port=5010)

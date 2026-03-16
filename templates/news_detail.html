@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block title %}Лыжные гонки — {{ news[1] }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-detail-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        padding: 3rem 0;
+    }
+
+    .news-detail-body::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-50px) rotate(5deg); }
+    }
+
+    .news-detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 2rem;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+        flex-wrap: wrap;
+    }
+
+    .breadcrumbs a {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .breadcrumbs a:hover {
+        color: #3498db;
+    }
+
+    .breadcrumbs .separator {
+        color: rgba(255,255,255,0.3);
+    }
+
+    .breadcrumbs .current {
+        color: #3498db;
+        font-weight: 600;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .back-btn:hover {
+        background: #3498db;
+        border-color: #3498db;
+        transform: translateX(-5px);
+    }
+
+    .news-detail-card {
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        position: relative;
+        border: 3px solid #3498db;
+        animation: cardAppear 0.6s ease-out;
+    }
+
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .news-detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #3498db, #e74c3c, #3498db);
+        background-size: 200% 100%;
+        animation: gradientMove 3s linear infinite;
+        z-index: 1;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
+    .news-detail-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-bottom: 4px solid #3498db;
+    }
+
+    .news-detail-content {
+        padding: 2.5rem;
+    }
+
+    .news-detail-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .news-detail-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .news-detail-date {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 5px 15px rgba(52,152,219,0.3);
+    }
+
+    .news-detail-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+    }
+
+    .news-detail-text p {
+        margin-bottom: 1.5rem;
+    }
+
+    .news-detail-text h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 2rem 0 1rem;
+        padding-left: 1rem;
+        border-left: 5px solid #3498db;
+    }
+
+    .related-news {
+        margin-top: 3rem;
+    }
+
+    .related-title {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .related-item {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 2px solid #3498db;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .related-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+    }
+
+    .related-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .related-content {
+        padding: 1rem;
+    }
+
+    .related-name {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+    }
+
+    .related-date {
+        color: #7f8c8d;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .news-detail-image {
+            height: 250px;
+        }
+
+        .news-detail-content {
+            padding: 1.8rem;
+        }
+
+        .news-detail-title {
+            font-size: 1.8rem;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="news-detail-body">
+    <div class="news-detail-container">
+        <!-- Хлебные крошки -->
+        <div class="breadcrumbs">
+            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Главная</a>
+            <span class="separator">›</span>
+            <a href="{{ url_for('index') }}">Новости</a>
+            <span class="separator">›</span>
+            <span class="current">{{ news[1] }}</span>
+        </div>
+
+        <!-- Кнопка назад -->
+        <a href="{{ url_for('index') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Вернуться к новостям
+        </a>
+
+        <!-- Карточка новости -->
+        <div class="news-detail-card">
+            <img src="{{ news[3] }}" alt="{{ news[1] }}" class="news-detail-image">
+
+            <div class="news-detail-content">
+                <div class="news-detail-header">
+                    <h1 class="news-detail-title">{{ news[1] }}</h1>
+                    <div class="news-detail-date">
+                        <i class="fas fa-calendar-alt"></i> {{ news[4] }}
+                    </div>
+                </div>
+
+                <div class="news-detail-text">
+                    <p>{{ news[2] }}</p>
+                </div>
+
+                <!-- Категория -->
+                <div style="margin-top: 2rem;">
+                    <span class="badge bg-primary">{{ news[5] }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Похожие новости -->
+        {% if related %}
+        <div class="related-news">
+            <h3 class="related-title"><i class="fas fa-newspaper"></i> Другие новости</h3>
+            <div class="related-grid">
+                {% for item in related %}
+                <a href="{{ url_for('news_detail', news_key=item[0]) }}" class="related-item">
+                    <img src="{{ item[2] }}" alt="{{ item[1] }}" class="related-image">
+                    <div class="related-content">
+                        <div class="related-name">{{ item[1] }}</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> {{ item[3] }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
