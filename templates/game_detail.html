@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game[2] }} — Прогноз{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-detail-body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
+    .game-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        border: 2px solid #3498db;
+        overflow: hidden;
+    }
+    .game-header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 2rem;
+    }
+    .game-status {
+        display: inline-block;
+        padding: 0.3rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .status-upcoming { background: #3498db; }
+    .status-active { background: #27ae60; animation: pulse 1.5s infinite; }
+    .status-finished { background: #7f8c8d; }
+    .game-content {
+        padding: 2rem;
+    }
+    .prediction-form {
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 2px solid #e0e0e0;
+    }
+    .form-select {
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    .btn-predict {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        width: 100%;
+        transition: all 0.3s;
+    }
+    .btn-predict:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(52,152,219,0.3);
+    }
+    .prediction-made {
+        background: #27ae60;
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    @keyframes pulse {
+        0%,100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="game-detail-body">
+    <div class="container">
+        <div class="game-card">
+            <div class="game-header">
+                <div class="game-status status-{{ game[8] }}">
+                    {% if game[8] == 'upcoming' %}⏳ Ожидается
+                    {% elif game[8] == 'active' %}🔥 Прием прогнозов
+                    {% else %}🏁 Завершено
+                    {% endif %}
+                </div>
+                <h1 class="mb-2">{{ game[2] }}</h1>
+                <p class="mb-0"><i class="fas fa-calendar-alt"></i> {{ game[3] }}</p>
+                <p><i class="fas fa-map-marker-alt"></i> {{ game[4] }}</p>
+                {% if game[10] > 1 %}
+                    <span class="badge bg-warning">x{{ game[10] }} баллов</span>
+                {% endif %}
+            </div>
+
+            <div class="game-content">
+                {% if game[8] == 'finished' %}
+                    <div class="alert alert-info">
+                        <h4>🏆 Результаты</h4>
+                        <p><strong>1 место:</strong> {{ game[5] }}</p>
+                        <p><strong>2 место:</strong> {{ game[6] }}</p>
+                        <p><strong>3 место:</strong> {{ game[7] }}</p>
+                    </div>
+                {% endif %}
+
+                {% if user_prediction %}
+                    <div class="prediction-made">
+                        <h5>Ваш прогноз</h5>
+                        <p><strong>Победитель:</strong> {{ user_prediction[3] }}</p>
+                        {% if user_prediction[4] %}<p><strong>2-е место:</strong> {{ user_prediction[4] }}</p>{% endif %}
+                        {% if user_prediction[5] %}<p><strong>3-е место:</strong> {{ user_prediction[5] }}</p>{% endif %}
+                        {% if user_prediction[6] > 0 %}
+                            <p><strong>Получено баллов:</strong> {{ user_prediction[6] }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if game[8] != 'finished' %}
+                    <form method="POST" action="{{ url_for('make_prediction', game_id=game[0]) }}" class="prediction-form">
+                        <h4 class="mb-3">Ваш прогноз</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🏆 Победитель</label>
+                            <select name="winner" class="form-select" required>
+                                <option value="">Выберите спортсмена</option>
+                                {% for athlete in athletes %}
+                                    <option value="{{ athlete }}" {% if user_prediction and user_prediction[3] == athlete %}selected{% endif %}>{{ athlete }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🥈 Второе место (необязательно)</label>
+                            <select name="second" class="form-select">
+                                <option value="">Не выбрано</option>
+                                {% for athlete in athletes %}
+                                    <option value="{{ athlete }}" {% if user_prediction and user_prediction[4] == athlete %}selected{% endif %}>{{ athlete }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">🥉 Третье место (необязательно)</label>
+                            <select name="third" class="form-select">
+                                <option value="">Не выбрано</option>
+                                {% for athlete in athletes %}
+                                    <option value="{{ athlete }}" {% if user_prediction and user_prediction[5] == athlete %}selected{% endif %}>{{ athlete }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-predict">
+                            <i class="fas fa-check-circle"></i>
+                            {% if user_prediction %}Изменить прогноз{% else %}Сделать прогноз{% endif %}
+                        </button>
+
+                        <div class="mt-3 text-muted">
+                            <small>Вы можете изменить прогноз до начала соревнования.</small>
+                        </div>
+                    </form>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('games_list') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Назад к списку
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

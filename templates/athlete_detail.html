@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}{{ athlete[1] }} - Лыжные гонки{% endblock %}
+
+{% block extra_css %}
+<style>
+    .athlete-detail-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
+
+    .athlete-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .back-link {
+        margin-bottom: 2rem;
+    }
+
+    .back-link a {
+        color: white;
+        text-decoration: none;
+        background: rgba(255,255,255,0.1);
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-link a:hover {
+        background: #3498db;
+    }
+
+    .athlete-card {
+        background: white;
+        border-radius: 30px;
+        overflow: hidden;
+        border: 3px solid #3498db;
+    }
+
+    .athlete-header {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .athlete-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+        background: #34495e;
+    }
+
+    .athlete-image-placeholder {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: #34495e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        border: 4px solid white;
+    }
+
+    .athlete-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .athlete-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .badge-active {
+        background: #27ae60;
+        color: white;
+    }
+
+    .badge-inactive {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .athlete-content {
+        padding: 2rem;
+    }
+
+    .info-section {
+        margin-bottom: 2rem;
+    }
+
+    .info-title {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.5rem;
+    }
+
+    .wiki-btn {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 1rem;
+    }
+
+    .wiki-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(52,152,219,0.3);
+    }
+
+    @media (max-width: 768px) {
+        .athlete-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="athlete-detail-body">
+    <div class="athlete-container">
+        <div class="back-link">
+            <a href="{{ url_for('team') }}">
+                <i class="fas fa-arrow-left"></i> Вернуться к составу
+            </a>
+        </div>
+
+        <div class="athlete-card">
+            <div class="athlete-header">
+                {% if athlete[5] %}
+                    <img src="{{ athlete[5] }}" alt="{{ athlete[1] }}" class="athlete-image">
+                {% else %}
+                    <div class="athlete-image-placeholder">⛷️</div>
+                {% endif %}
+
+                <div class="athlete-info">
+                    <h1>{{ athlete[1] }}</h1>
+                    <p>
+                        {% if athlete[2] == 'men' %}
+                            Мужская команда
+                        {% elif athlete[2] == 'women' %}
+                            Женская команда
+                        {% else %}
+                            {{ athlete[2] }}
+                        {% endif %}
+                        • {{ athlete[3] }}
+                    </p>
+
+                    <div class="athlete-meta">
+                        {% if athlete[7] %}
+                            <span class="badge badge-active">Действующий спортсмен</span>
+                        {% else %}
+                            <span class="badge badge-inactive">Вне состава</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="athlete-content">
+                {% if athlete[4] %}
+                <div class="info-section">
+                    <h3 class="info-title">📋 Биография</h3>
+                    <p>{{ athlete[4] }}</p>
+                </div>
+                {% else %}
+                <div class="info-section">
+                    <h3 class="info-title">📋 Биография</h3>
+                    <p>Биография пока не загружена.</p>
+                </div>
+                {% endif %}
+
+                {% if athlete[6] %}
+                <div style="text-align: center;">
+                    <a href="{{ athlete[6] }}" target="_blank" class="wiki-btn">
+                        <i class="fab fa-wikipedia-w"></i> Читать полную статью в Wikipedia
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

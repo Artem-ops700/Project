@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event[2] }} — Обсуждение{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === СТИЛЬ В СООТВЕТСТВИИ С ГЛАВНОЙ СТРАНИЦЕЙ === */
+    :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --light: #ecf0f1;
+        --dark: #1a252f;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --gradient-primary: linear-gradient(135deg, #2c3e50, #3498db);
+        --gradient-dark: linear-gradient(135deg, #1a252f, #2c3e50);
+        --gradient-accent: linear-gradient(135deg, #e74c3c, #c0392b);
+        --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+        --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.2);
+        --border-radius: 15px;
+    }
+
+    .comments-body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
+
+    .event-header {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 2px solid var(--secondary);
+    }
+
+    .event-header h1 {
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .event-meta {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        color: #7f8c8d;
+    }
+
+    .event-meta i {
+        color: var(--secondary);
+        margin-right: 5px;
+    }
+
+    .event-status {
+        display: inline-block;
+        padding: 0.3rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        color: white;
+        margin-top: 1rem;
+    }
+    .status-upcoming { background: #3498db; }
+    .status-active { background: #27ae60; animation: blink 1.5s infinite; }
+    .status-finished { background: #7f8c8d; }
+    @keyframes blink {
+        0%,100%{ opacity: 1; }
+        50%{ opacity: 0.7; }
+    }
+
+    /* Форма комментария */
+    .comment-form {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 2px solid var(--secondary);
+    }
+
+    .comment-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .comment-form textarea:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+    }
+
+    .btn-submit {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Список комментариев */
+    .comments-list {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 2px solid var(--secondary);
+    }
+
+    .comment-item {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1.5rem 0;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .comment-author {
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .comment-author i {
+        color: var(--secondary);
+        font-size: 1.2rem;
+    }
+
+    .comment-date {
+        color: #95a5a6;
+        font-size: 0.9rem;
+    }
+
+    .comment-text {
+        color: #2c3e50;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+
+    .no-comments {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+        font-style: italic;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: var(--secondary);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="comments-body">
+    <div class="container">
+        <a href="{{ url_for('events') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Назад к календарю
+        </a>
+
+        <!-- Информация о событии -->
+        <div class="event-header">
+            <h1>{{ event[2] }}</h1>
+            <div class="event-meta">
+                <span><i class="fas fa-calendar-alt"></i> {{ event[3] }}</span>
+                <span><i class="fas fa-map-marker-alt"></i> {{ event[4] }}</span>
+            </div>
+            <div class="event-status status-{{ event[8] }}">
+                {% if event[8] == 'upcoming' %}⏳ Ожидается
+                {% elif event[8] == 'active' %}🔥 Идёт сейчас
+                {% else %}🏁 Завершено
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Форма добавления комментария (только для авторизованных) -->
+        {% if session.get('user_id') %}
+        <div class="comment-form">
+            <h4 class="mb-3">Оставить комментарий</h4>
+            <form method="POST" action="{{ url_for('add_event_comment', event_id=event[1]) }}">
+                <textarea name="comment" placeholder="Напишите ваше мнение о соревновании..." required></textarea>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Отправить
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <a href="{{ url_for('login') }}">Войдите</a>, чтобы оставлять комментарии.
+        </div>
+        {% endif %}
+
+        <!-- Список комментариев -->
+        <div class="comments-list">
+            <h4 class="mb-4"><i class="fas fa-comments"></i> Обсуждение ({{ comments|length }})</h4>
+
+            {% if comments %}
+                {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="fas fa-user-circle"></i> {{ comment[6] }}
+                        </span>
+                        <span class="comment-date">
+                            <i class="far fa-clock"></i> {{ comment[5] }}
+                        </span>
+                    </div>
+                    <div class="comment-text">
+                        {{ comment[3] }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-comments">
+                    <i class="far fa-smile-wink fa-3x mb-3" style="color: #b0c4de;"></i>
+                    <p>Пока нет комментариев. Будьте первым!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
