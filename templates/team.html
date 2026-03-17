@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/nav-buttons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* Строгий дизайн для страницы состава */
@@ -279,41 +280,62 @@
             border: 2px solid #edf2f7;
             border-radius: 10px;
             margin-bottom: 0.8rem;
-            padding: 0.8rem 1.2rem;
-            color: var(--primary);
-            font-weight: 500;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            cursor: default;
+            transition: all 0.3s ease;
         }
 
         .athlete-item:hover {
-            background: linear-gradient(135deg, #f8f9fa, #ffffff);
             border-color: var(--secondary);
-            transform: translateX(10px) scale(1.02);
+            transform: translateX(5px);
             box-shadow: var(--shadow-sm);
         }
 
-        .athlete-item::before {
-            content: '⛷️';
+        .athlete-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .athlete-name i {
+            color: var(--secondary);
             font-size: 1.2rem;
-            opacity: 0.7;
+        }
+
+        .btn-detail {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .athlete-item:hover::before {
-            transform: rotate(360deg);
-            opacity: 1;
+        .btn-detail:hover {
+            background: var(--dark);
+            transform: scale(1.05);
+            color: white;
         }
 
-        .women-card .athlete-item:hover {
-            border-color: #8e44ad;
+        .btn-detail i {
+            font-size: 0.9rem;
         }
 
-        .women-card .athlete-item::before {
-            content: '⛷️';
+        .women-card .btn-detail {
+            background: #8e44ad;
+        }
+
+        .women-card .btn-detail:hover {
+            background: #6c3483;
         }
 
         /* Карточка исключенных */
@@ -358,6 +380,8 @@
             font-weight: 500;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            display: inline-block;
         }
 
         .excluded-tag:hover {
@@ -393,7 +417,7 @@
             font-size: 1.2rem;
         }
 
-        /* Кнопки переключения */
+        /* Кнопки переключения (для мобильных) */
         .team-toggle {
             display: flex;
             gap: 1rem;
@@ -500,6 +524,16 @@
                 padding: 0.8rem 1.5rem;
                 font-size: 0.9rem;
             }
+
+            .athlete-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .btn-detail {
+                align-self: flex-end;
+            }
         }
 
         /* Счетчик спортсменов */
@@ -519,326 +553,221 @@
     </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url_for('index') }}">⛷️ Лыжные гонки</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="menu">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('index') }}">Главная</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/team.html' %}active{% endif %}" href="{{ url_for('team') }}">Состав</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/events.html' %}active{% endif %}" href="{{ url_for('events') }}">Соревнования</a></li>
-                {% if session.get('user_id') %}
-                    <li class="nav-item"><a class="nav-link {% if request.path == '/profile' %}active{% endif %}" href="{{ url_for('profile') }}">Профиль</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выйти</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{{ url_for('login') }}">Войти</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{{ url_for('register') }}">Регистрация</a></li>
-                {% endif %}
-            </ul>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">⛷️ Лыжные гонки</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('team') }}">Состав</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('events') }}">Соревнования</a></li>
+                    {% if session.get('user_id') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('profile') }}">Профиль</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Выйти</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Войти</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Регистрация</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-  <header class="py-5">
-    <div class="container text-center">
-      <h1 class="fw-bold">Состав сборной команды</h1>
-      <p class="lead text-white-50">Актуальный состав на сезон 2024/2025 • 78 спортсменов</p>
-    </div>
-  </header>
-
-  <main class="container py-5">
-    <!-- Статистика -->
-    <div class="team-stats">
-      <div class="stat-item">
-        <div class="stat-number">47</div>
-        <div class="stat-label">Мужчины</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">31</div>
-        <div class="stat-label">Женщины</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">5</div>
-        <div class="stat-label">Тренерских групп</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">11</div>
-        <div class="stat-label">Регионов</div>
-      </div>
-    </div>
-
-    <!-- Фильтр (опционально) -->
-    <div class="search-box">
-      <i>🔍</i>
-      <input type="text" id="athleteSearch" placeholder="Поиск спортсмена по фамилии...">
-    </div>
-
-    <!-- Кнопки переключения (для мобильных) -->
-    <div class="team-toggle d-md-none">
-      <button class="toggle-btn active" onclick="showTeam('men')">Мужчины</button>
-      <button class="toggle-btn women" onclick="showTeam('women')">Женщины</button>
-    </div>
-
-    <div class="row g-4">
-      <!-- Мужская команда -->
-      <div class="col-md-6 men-team">
-        <div class="team-card men-card">
-          <div class="card-body">
-            <h5 class="card-title">
-              <span>⛷️</span> Мужская команда
-              <span class="athlete-count">47 спортсменов</span>
-            </h5>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Бородавко / Жмурко
-            </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Александр Большунов</li>
-              <li class="athlete-item">Артём Мальцев</li>
-              <li class="athlete-item">Егор Митрошин</li>
-              <li class="athlete-item">Денис Спицов</li>
-              <li class="athlete-item">Алексей Червоткин</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Сорина / Черноусова
-            </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Сергей Ардашев</li>
-              <li class="athlete-item">Александр Бакуров</li>
-              <li class="athlete-item">Сергей Волков</li>
-              <li class="athlete-item">Никита Денисов</li>
-              <li class="athlete-item">Савелий Коростелёв</li>
-              <li class="athlete-item">Александр Терентьев</li>
-              <li class="athlete-item">Константин Тиунов</li>
-              <li class="athlete-item">Иван Якимушкин</li>
-              <li class="athlete-item">Сергей Устюгов</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Перевозчикова / Акимова
-            </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Иван Горбунов</li>
-              <li class="athlete-item">Дмитрий Жуль</li>
-              <li class="athlete-item">Сергей Забалуев</li>
-              <li class="athlete-item">Павел Козадаев</li>
-              <li class="athlete-item">Илья Семиков</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Седова
-            </div>
-            <ul class="athletes-list mb-0">
-              <li class="athlete-item">Александр Ившин</li>
-              <li class="athlete-item">Платон Исламшин</li>
-              <li class="athlete-item">Кирилл Кочегаров</li>
-              <li class="athlete-item">Вячеслав Мамичев</li>
-              <li class="athlete-item">Владислав Осипов</li>
-              <li class="athlete-item">Дмитрий Пузанов</li>
-              <li class="athlete-item">Никита Радионов</li>
-              <li class="athlete-item">Павел Соловьёв</li>
-              <li class="athlete-item">Илья Чертков</li>
-            </ul>
-          </div>
+    <header class="py-5">
+        <div class="container text-center">
+            <h1 class="fw-bold">Состав сборной команды</h1>
+            <p class="lead text-white-50">Актуальный состав на сезон 2024/2025</p>
         </div>
-      </div>
+    </header>
 
-      <!-- Женская команда -->
-      <div class="col-md-6 women-team">
-        <div class="team-card women-card">
-          <div class="card-body">
-            <h5 class="card-title">
-              <span>⛷️</span> Женская команда
-              <span class="athlete-count">31 спортсменка</span>
-            </h5>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Бородавко / Жмурко
+    <main class="container py-5">
+        <!-- Статистика -->
+        <div class="team-stats">
+            <div class="stat-item">
+                <div class="stat-number">47</div>
+                <div class="stat-label">Мужчины</div>
             </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Алёна Баранова</li>
-              <li class="athlete-item">Мария Истомина</li>
-              <li class="athlete-item">Елизавета Пантрина</li>
-              <li class="athlete-item">Анастасия Фалеева</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Сорина / Черноусова
+            <div class="stat-item">
+                <div class="stat-number">31</div>
+                <div class="stat-label">Женщины</div>
             </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Дарья Непряева</li>
-              <li class="athlete-item">Татьяна Сорина</li>
-              <li class="athlete-item">Вероника Степанова</li>
-              <li class="athlete-item">Юлия Ступак</li>
-              <li class="athlete-item">Наталья Терентьева</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Перевозчикова / Акимова
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Тренерских групп</div>
             </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Лидия Горбунова</li>
-              <li class="athlete-item">Дарья Канева</li>
-              <li class="athlete-item">Евгения Крупицкая</li>
-              <li class="athlete-item">Екатерина Смирнова</li>
-              <li class="athlete-item">Мистер Писькин</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Седова
+            <div class="stat-item">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Регионов</div>
             </div>
-            <ul class="athletes-list mb-3">
-              <li class="athlete-item">Анастасия Кулешова</li>
-              <li class="athlete-item">Екатерина Никитина</li>
-            </ul>
-
-            <div class="coach-group">
-              <i>👥</i> Группа Нутрихина
-            </div>
-            <ul class="athletes-list mb-0">
-              <li class="athlete-item">Руслана Дьякова</li>
-              <li class="athlete-item">Арина Каличева</li>
-              <li class="athlete-item">Елизавета Маслакова</li>
-              <li class="athlete-item">Алина Пеклецова</li>
-              <li class="athlete-item">Арина Рощина</li>
-              <li class="athlete-item">Екатерина Шибекина</li>
-              <li class="athlete-item">Ксения Шорохова</li>
-            </ul>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Выведенные из состава -->
-    <div class="row mt-5">
-      <div class="col-12">
-        <div class="excluded-card">
-          <div class="card-body">
-            <h5 class="card-title">Выведены из состава</h5>
-            <div class="excluded-list">
-              <span class="excluded-tag">Ермил Вокуев</span>
-              <span class="excluded-tag">Илья Порошкин</span>
-              <span class="excluded-tag">Антон Тимашов</span>
-              <span class="excluded-tag">Анастасия Прокофьева</span>
-              <span class="excluded-tag">Олеся Ляшенко</span>
-              <span class="excluded-tag">Карина Гончарова</span>
-              <span class="excluded-tag">Екатерина Евтягина</span>
-              <span class="excluded-tag">Егор Гусак</span>
-              <span class="excluded-tag">Даниил Муралеев</span>
-              <span class="excluded-tag">Данил Нечипоренко</span>
-              <span class="excluded-tag">Илья Трегубов</span>
-            </div>
-          </div>
+        <!-- Фильтр поиска -->
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="athleteSearch" placeholder="Поиск спортсмена по фамилии...">
         </div>
-      </div>
-    </div>
 
-    <!-- Дополнительная информация -->
-    <div class="row mt-4">
-      <div class="col-12">
-        <div class="card bg-light">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-md-8">
-                <h5 class="card-title text-primary mb-3">📊 Распределение по регионам</h5>
-                <div class="d-flex flex-wrap gap-3">
-                  <span class="badge bg-primary p-2">Тюменская обл. - 15</span>
-                  <span class="badge bg-success p-2">Архангельская обл. - 12</span>
-                  <span class="badge bg-warning p-2">Москва - 10</span>
-                  <span class="badge bg-info p-2">Респ. Коми - 8</span>
-                  <span class="badge bg-secondary p-2">Красноярский край - 7</span>
+        <!-- Кнопки переключения (для мобильных) -->
+        <div class="team-toggle d-md-none">
+            <button class="toggle-btn active" onclick="showTeam('men')">Мужчины</button>
+            <button class="toggle-btn women" onclick="showTeam('women')">Женщины</button>
+        </div>
+
+        <div class="row g-4">
+            <!-- Мужская команда -->
+            <div class="col-md-6 men-team">
+                <div class="team-card men-card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>⛷️</span> Мужская команда
+                            <span class="athlete-count">{{ athletes|selectattr('team', 'equalto', 'men')|selectattr('is_active', 'equalto', True)|list|length }} спортсменов</span>
+                        </h5>
+
+                        {% set men_groups = ['Бородавко / Жмурко', 'Сорина / Черноусова', 'Перевозчикова / Акимова', 'Седова'] %}
+                        {% for group in men_groups %}
+                            <div class="coach-group">
+                                <i>👥</i> Группа {{ group }}
+                            </div>
+                            <ul class="athletes-list mb-3">
+                                {% for a in athletes if a.team == 'men' and a.coach_group == group and a.is_active %}
+                                <li class="athlete-item">
+                                    <span class="athlete-name">
+                                        <i class="fas fa-user"></i> {{ a.name }}
+                                    </span>
+                                    <a href="{{ url_for('athlete_detail', athlete_id=a.id) }}" class="btn-detail">
+                                        <i class="fas fa-info-circle"></i> Подробнее
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <span class="badge bg-danger p-3">Обновлено: Март 2025</span>
-              </div>
             </div>
-          </div>
+
+            <!-- Женская команда -->
+            <div class="col-md-6 women-team">
+                <div class="team-card women-card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>⛷️</span> Женская команда
+                            <span class="athlete-count">{{ athletes|selectattr('team', 'equalto', 'women')|selectattr('is_active', 'equalto', True)|list|length }} спортсменок</span>
+                        </h5>
+
+                        {% set women_groups = ['Бородавко / Жмурко', 'Сорина / Черноусова', 'Перевозчикова / Акимова', 'Седова', 'Нутрихина'] %}
+                        {% for group in women_groups %}
+                            <div class="coach-group">
+                                <i>👥</i> Группа {{ group }}
+                            </div>
+                            <ul class="athletes-list mb-3">
+                                {% for a in athletes if a.team == 'women' and a.coach_group == group and a.is_active %}
+                                <li class="athlete-item">
+                                    <span class="athlete-name">
+                                        <i class="fas fa-user"></i> {{ a.name }}
+                                    </span>
+                                    <a href="{{ url_for('athlete_detail', athlete_id=a.id) }}" class="btn-detail">
+                                        <i class="fas fa-info-circle"></i> Подробнее
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
 
-  <footer class="text-white text-center py-3">
-    <small>© 2025 Лыжные гонки • Сборная России • Актуальный состав</small>
-  </footer>
+        <!-- Выведенные из состава -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="excluded-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Выведены из состава</h5>
+                        <div class="excluded-list">
+                            {% for a in athletes if not a.is_active %}
+                            <a href="{{ url_for('athlete_detail', athlete_id=a.id) }}" class="excluded-tag" style="text-decoration: none;">{{ a.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Дополнительная информация -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="card-title text-primary mb-3">📊 Распределение по регионам</h5>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <span class="badge bg-primary p-2">Тюменская обл. - 15</span>
+                                    <span class="badge bg-success p-2">Архангельская обл. - 12</span>
+                                    <span class="badge bg-warning p-2">Москва - 10</span>
+                                    <span class="badge bg-info p-2">Респ. Коми - 8</span>
+                                    <span class="badge bg-secondary p-2">Красноярский край - 7</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <span class="badge bg-danger p-3">Обновлено: Март 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-  <script>
-    // Поиск спортсменов
-    document.getElementById('athleteSearch').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const athletes = document.querySelectorAll('.athlete-item');
+    <footer class="text-white text-center py-3">
+        <small>© 2025 Лыжные гонки • Сборная России • Актуальный состав</small>
+    </footer>
 
-        athletes.forEach(athlete => {
-            const name = athlete.textContent.toLowerCase();
-            if (name.includes(searchTerm)) {
-                athlete.style.display = 'flex';
-                athlete.style.animation = 'fadeIn 0.3s ease';
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Поиск спортсменов
+        document.getElementById('athleteSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const athletes = document.querySelectorAll('.athlete-item');
+
+            athletes.forEach(athlete => {
+                const name = athlete.querySelector('.athlete-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    athlete.style.display = 'flex';
+                } else {
+                    athlete.style.display = 'none';
+                }
+            });
+        });
+
+        // Переключение между командами на мобильных
+        function showTeam(team) {
+            const menTeam = document.querySelector('.men-team');
+            const womenTeam = document.querySelector('.women-team');
+            const menBtn = document.querySelector('.toggle-btn');
+            const womenBtn = document.querySelector('.toggle-btn.women');
+
+            if (team === 'men') {
+                menTeam.style.display = 'block';
+                womenTeam.style.display = 'none';
+                menBtn.classList.add('active');
+                womenBtn.classList.remove('active');
             } else {
-                athlete.style.display = 'none';
+                menTeam.style.display = 'none';
+                womenTeam.style.display = 'block';
+                womenBtn.classList.add('active');
+                menBtn.classList.remove('active');
             }
-        });
-    });
-
-    // Переключение между командами на мобильных
-    function showTeam(team) {
-        const menTeam = document.querySelector('.men-team');
-        const womenTeam = document.querySelector('.women-team');
-        const menBtn = document.querySelector('.toggle-btn');
-        const womenBtn = document.querySelector('.toggle-btn.women');
-
-        if (team === 'men') {
-            menTeam.style.display = 'block';
-            womenTeam.style.display = 'none';
-            menBtn.classList.add('active');
-            womenBtn.classList.remove('active');
-        } else {
-            menTeam.style.display = 'none';
-            womenTeam.style.display = 'block';
-            womenBtn.classList.add('active');
-            menBtn.classList.remove('active');
         }
-    }
 
-    // Анимация при скролле
-    window.addEventListener('scroll', function() {
-        const cards = document.querySelectorAll('.team-card');
-        cards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 100) {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }
-        });
-    });
-
-    // Добавляем эффект появления для исключенных тегов
-    const excludedTags = document.querySelectorAll('.excluded-tag');
-    excludedTags.forEach((tag, index) => {
-        tag.style.animation = `fadeIn 0.3s ease ${index * 0.05}s forwards`;
-        tag.style.opacity = '0';
-    });
-
-    // Анимация fadeIn
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        // Показываем обе команды на десктопе, скрываем женскую на мобильных по умолчанию
+        if (window.innerWidth < 768) {
+            document.querySelector('.women-team').style.display = 'none';
         }
-    `;
-    document.head.appendChild(style);
-
-    // Показываем обе команды на десктопе, скрываем женскую на мобильных по умолчанию
-    if (window.innerWidth < 768) {
-        document.querySelector('.women-team').style.display = 'none';
-    }
-  </script>
+    </script>
 </body>
 </html>
