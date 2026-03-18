@@ -400,25 +400,23 @@
 
         <!-- Карточка новости -->
         <div class="news-detail-card">
-            <img src="/static/images/news/season-prep.jpg" alt="Подготовка к сезону" class="news-detail-image">
+            <img src="/static/images/news/season-prep.jpg" alt="Подготовка к сезону" class="news-detail-image" onerror="this.onerror=null; this.src='/static/images/news/default.jpg'">
 
             <div class="news-detail-content">
                 <div class="news-detail-header">
-                    <h1 class="news-detail-title">Подготовка к сезону 2025/2026</h1>
+                    <h1 class="news-detail-title">Подготовка к сезону 2026/2027</h1>
                     <div class="news-detail-date">
-                        <i class="fas fa-calendar-alt"></i> 20 апреля 2026
+                        <i class="fas fa-calendar-alt"></i> 15 марта 2026
                     </div>
                 </div>
 
                 <div class="news-detail-text">
                     <p class="highlight">
-                        ⛷️ Сборная России по лыжным гонкам завершила учебно-тренировочные сборы в горах и перешла к ледовым тренировкам. Спортсмены демонстрируют отличную форму и готовы к новым достижениям!
+                        ⛷️ Сборная России по лыжным гонкам завершила учебно‑тренировочные сборы в горах и перешла к ледовым тренировкам. Спортсмены демонстрируют отличную форму и готовы к новым достижениям!
                     </p>
 
                     <h3>🏔️ Горные сборы</h3>
-                    <p>
-                        Подготовка к сезону началась в начале октября на горных курортах Киргизии. Спортсмены провели три недели на высоте 2500 метров, где отрабатывали функциональную выносливость и технику классического стиля. Тренировки включали:
-                    </p>
+                    <p>Подготовка к сезону началась в начале октября на горных курортах Киргизии. Спортсмены провели три недели на высоте 2500 метров, где отрабатывали функциональную выносливость и технику классического стиля. Тренировки включали:</p>
                     <ul>
                         <li>Ежедневные кроссы на 15-20 км</li>
                         <li>Специальные упражнения на лыжероллерах</li>
@@ -427,9 +425,7 @@
                     </ul>
 
                     <h3>❄️ Ледовые тренировки</h3>
-                    <p>
-                        С 15 декабря команда переехала на базу в Тюмени, где уже лег снег. Первые тренировки на льду показали, что спортсмены хорошо сохранили форму после горных сборов. Особое внимание уделяется:
-                    </p>
+                    <p>С 15 декабря команда переехала на базу в Тюмени, где уже лег снег. Первые тренировки на льду показали, что спортсмены хорошо сохранили форму после горных сборов. Особое внимание уделяется:</p>
                     <ul>
                         <li>Отработке спринтерских качеств</li>
                         <li>Технике прохождения поворотов</li>
@@ -437,14 +433,7 @@
                     </ul>
 
                     <h3>📊 Состояние спортсменов</h3>
-                    <p>
-                        Тренерский штаб отмечает отличное функциональное состояние всех членов сборной. Александр Большунов, Юлия Ступак и другие лидеры команды показывают высокие результаты на контрольных тренировках. Молодые спортсмены также радуют своим прогрессом.
-                    </p>
-
-                    <h3>🎯 Планы на ближайшее время</h3>
-                    <p>
-                        До конца декабря команда проведет серию контрольных стартов, после чего определится состав на первые этапы Кубка России. Первые официальные соревнования пройдут в начале января в Тюмени.
-                    </p>
+                    <p>Тренерский штаб отмечает отличное функциональное состояние всех членов сборной. Александр Большунов, Юлия Ступак и другие лидеры команды показывают высокие результаты на контрольных тренировках. Молодые спортсмены также радуют своим прогрессом.</p>
                 </div>
 
                 <!-- Теги -->
@@ -452,16 +441,16 @@
                     <span class="news-tag"><i class="fas fa-tag"></i> Подготовка</span>
                     <span class="news-tag"><i class="fas fa-tag"></i> Сборы</span>
                     <span class="news-tag"><i class="fas fa-tag"></i> Тренировки</span>
-                    <span class="news-tag"><i class="fas fa-tag"></i> Сезон 2025/2026</span>
+                    <span class="news-tag"><i class="fas fa-tag"></i> Сезон 2026/2027</span>
                 </div>
 
-                <!-- Навигация между новостями -->
+                <!-- Навигация между новостями (исправлено) -->
                 <div class="news-navigation">
-                    <a href="#" class="nav-btn prev disabled">
-                        <i class="fas fa-arrow-left"></i> Предыдущая новость
+                    <a href="{{ url_for('news_world_championship_2027') }}" class="nav-btn prev">
+                        <i class="fas fa-arrow-left"></i> Чемпионат мира 2027
                     </a>
                     <a href="{{ url_for('news_juniors') }}" class="nav-btn next">
-                        Следующая: Юниоры дебютируют <i class="fas fa-arrow-right"></i>
+                        Юниоры дебютируют <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -472,24 +461,24 @@
             <h3 class="related-title"><i class="fas fa-newspaper"></i> Другие новости</h3>
             <div class="related-grid">
                 <a href="{{ url_for('news_juniors') }}" class="related-item">
-                    <img src="/static/images/news/juniors.jpg" alt="Юниоры" class="related-image">
+                    <img src="/static/images/news/juniors.jpg" alt="Юниоры" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
                         <div class="related-name">Юниоры дебютируют</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 18 декабря</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 10 марта 2026</div>
                     </div>
                 </a>
                 <a href="{{ url_for('news_olympics') }}" class="related-item">
-                    <img src="/static/images/news/olympics.jpg" alt="Олимпиада" class="related-image">
+                    <img src="/static/images/news/olympics.jpg" alt="Олимпиада" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
                         <div class="related-name">Цель — Олимпиада</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 15 декабря</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 5 марта 2026</div>
                     </div>
                 </a>
-                <a href="#" class="related-item">
-                    <img src="https://images.unsplash.com/photo-1518611507434-3d87def56cdb?w=200" alt="Сборы" class="related-image">
+                <a href="{{ url_for('news_spring_starts') }}" class="related-item">
+                    <img src="/static/images/news/spring.jpg" alt="Весенние старты" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
-                        <div class="related-name">Сборы в Тюмени</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 10 декабря</div>
+                        <div class="related-name">Весенние старты</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 20 апреля 2026</div>
                     </div>
                 </a>
             </div>

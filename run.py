@@ -640,6 +640,53 @@ def init_db():
     logger.info("✅ База данных инициализирована")
 
 
+def init_db():
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+
+    # ... существующие таблицы ...
+
+    # Добавляем поле region в athletes (если его нет)
+    c.execute("PRAGMA table_info(athletes)")
+    columns = [col[1] for col in c.fetchall()]
+    if 'region' not in columns:
+        c.execute("ALTER TABLE athletes ADD COLUMN region TEXT")
+
+    # Таблица достижений
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS athlete_achievements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            athlete_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            date TEXT,
+            description TEXT,
+            FOREIGN KEY (athlete_id) REFERENCES athletes (id)
+        )
+    ''')
+
+    # Добавим тестовые регионы и достижения для существующих спортсменов
+    c.execute("SELECT id, name FROM athletes")
+    athletes = c.fetchall()
+    regions = ['Тюменская обл.', 'Архангельская обл.', 'Москва', 'Респ. Коми', 'Красноярский край']
+    for i, (aid, name) in enumerate(athletes):
+        # присвоим регион по индексу
+        region = regions[i % len(regions)]
+        c.execute("UPDATE athletes SET region = ? WHERE id = ?", (region, aid))
+        # добавим достижения для некоторых
+        if i % 3 == 0:
+            c.execute('''
+                INSERT INTO athlete_achievements (athlete_id, title, date, description)
+                VALUES (?, ?, ?, ?)
+            ''', (aid, 'Победитель этапа Кубка мира', '2025-01-15', 'Спринт, классика'))
+            c.execute('''
+                INSERT INTO athlete_achievements (athlete_id, title, date, description)
+                VALUES (?, ?, ?, ?)
+            ''', (aid, 'Серебро Чемпионата России', '2024-12-10', '15 км, свободный стиль'))
+
+    conn.commit()
+    conn.close()
+
+
 def init_games():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
@@ -1691,6 +1738,19 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return "<h1>500 Внутренняя ошибка сервера</h1><p>Что-то пошло не так. Попробуйте позже.</p><a href='/'>Вернуться на главную</a>", 500
+
+
+@app.route('/news/spring-starts')
+def news_spring_starts():
+    return render_template('news/spring_starts.html')
+
+@app.route('/news/worldcup-calendar')
+def news_worldcup_calendar():
+    return render_template('news/worldcup_calendar.html')
+
+@app.route('/news/world-championship-2027')
+def news_world_championship_2027():
+    return render_template('news/world_championship_2027.html')
 
 
 # ============ ЗАПУСК СЕРВЕРА ============

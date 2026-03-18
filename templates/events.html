@@ -10,18 +10,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* === СТИЛЬ КАК НА ГЛАВНОЙ + КОНТРАСТНЫЕ КАРТОЧКИ === */
+        /* === ОБЩИЕ ПЕРЕМЕННЫЕ (как на главной) === */
         :root {
             --primary: #2c3e50;
             --secondary: #3498db;
             --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #1a252f;
             --success: #27ae60;
             --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #1a252f;
             --gradient-primary: linear-gradient(135deg, #2c3e50, #3498db);
-            --gradient-dark: linear-gradient(135deg, #1a252f, #2c3e50);
             --gradient-accent: linear-gradient(135deg, #e74c3c, #c0392b);
+            --gradient-success: linear-gradient(135deg, #27ae60, #229954);
+            --gradient-warning: linear-gradient(135deg, #f39c12, #e67e22);
+            --gradient-dark: linear-gradient(135deg, #1a252f, #2c3e50);
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
             --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -57,7 +59,7 @@
             z-index: -1;
         }
 
-        /* Хедер (такой же, как на главной) */
+        /* === ШАПКА === */
         header {
             background: var(--gradient-dark);
             padding: 4rem 0 !important;
@@ -72,33 +74,38 @@
             position: absolute;
             top: -50%;
             right: -10%;
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             background: radial-gradient(circle, rgba(52,152,219,0.2) 0%, transparent 70%);
             border-radius: 50%;
-            animation: float 10s ease-in-out infinite;
+            animation: float 12s ease-in-out infinite;
         }
 
         header::after {
-            content: '';
+            content: '📅';
             position: absolute;
             bottom: 10px;
-            left: 20px;
-            font-size: 80px;
+            left: 30px;
+            font-size: 100px;
             opacity: 0.1;
             transform: rotate(-15deg);
+            animation: slide 15s linear infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+        @keyframes slide {
+            0% { left: -100px; }
+            100% { left: 100%; }
         }
 
         header h1 {
             font-weight: 800;
             font-size: 3.2rem;
             color: white;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             letter-spacing: -1px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             position: relative;
@@ -111,16 +118,16 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 120px;
             height: 4px;
             background: var(--secondary);
             border-radius: 2px;
-            animation: pulse 2s ease-in-out infinite;
+            animation: pulseWidth 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { width: 100px; opacity: 1; }
-            50% { width: 150px; opacity: 0.7; }
+        @keyframes pulseWidth {
+            0%, 100% { width: 120px; opacity: 1; }
+            50% { width: 180px; opacity: 0.7; }
         }
 
         header .lead {
@@ -130,7 +137,7 @@
             margin: 1.5rem auto 0;
         }
 
-        /* Статистика */
+        /* === СТАТИСТИКА === */
         .events-stats {
             background: white;
             border-radius: var(--border-radius);
@@ -175,7 +182,7 @@
             letter-spacing: 1px;
         }
 
-        /* Фильтры */
+        /* === ФИЛЬТРЫ === */
         .filters-bar {
             background: white;
             border-radius: 50px;
@@ -210,7 +217,7 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* Заголовок сезона */
+        /* === ЗАГОЛОВОК СЕЗОНА === */
         .season-title {
             display: flex;
             align-items: center;
@@ -246,268 +253,137 @@
             font-weight: 700;
             font-size: 1rem;
             box-shadow: var(--shadow-md);
-            animation: pulseBadge 2s ease-in-out infinite;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes pulseBadge {
+        @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
 
-        /* ===== ТАБЛИЦА (ДЕСКТОП) ===== */
-        .table-responsive {
-            border: none;
-            border-radius: var(--border-radius);
-            background: transparent;
-            box-shadow: none;
-            overflow: visible;
+        /* === СЕТКА КАРТОЧЕК === */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        .table {
-            margin-bottom: 0;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
-
-        .table thead th {
-            background: var(--gradient-primary);
-            color: white;
-            font-weight: 700;
-            padding: 1.2rem 1.5rem;
-            border: none;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .table thead th:first-child {
-            border-radius: 15px 0 0 15px;
-        }
-
-        .table thead th:last-child {
-            border-radius: 0 15px 15px 0;
-        }
-
-        .table tbody tr {
+        .event-card {
             background: white;
             border-radius: var(--border-radius);
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
-            overflow: hidden;
-            border-left: 5px solid transparent;
-        }
-
-        /* Цветовая индикация по статусу */
-        .table tbody tr[data-status="upcoming"] { border-left-color: #3498db; }
-        .table tbody tr[data-status="active"] { border-left-color: #27ae60; }
-        .table tbody tr[data-status="finished"] { border-left-color: #7f8c8d; }
-
-        .table tbody tr:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 15px 30px rgba(52,152,219,0.2);
-            border-left-width: 8px;
-        }
-
-        .table tbody tr td {
-            padding: 1.5rem;
-            color: var(--primary);
-            font-weight: 500;
-            vertical-align: middle;
-            background: white;
-        }
-
-        .table tbody tr td:first-child {
-            border-radius: 15px 0 0 15px;
-        }
-
-        .table tbody tr td:last-child {
-            border-radius: 0 15px 15px 0;
-        }
-
-        .date-cell {
-            font-weight: 800;
-            color: var(--accent);
-            font-size: 1.2rem;
             display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .date-cell::before { content: ''; font-size: 1.2rem; opacity: 0.7; }
-
-        .event-cell {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
+            flex-direction: column;
+            border: 2px solid transparent;
         }
 
-        .place-cell {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .event-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary);
         }
-        .place-cell::before { content: '📍'; font-size: 1.1rem; opacity: 0.7; }
 
-        .comment-cell {
-            color: #666;
-            font-style: italic;
-            position: relative;
-            padding-left: 25px;
-        }
-        .comment-cell::before { content: '💬'; position: absolute; left: 0; top: 50%; transform: translateY(-50%); opacity: 0.7; }
-
-        .event-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-left: 10px;
+        /* Верхняя часть карточки с датой и иконкой */
+        .card-header {
+            background: var(--gradient-primary);
             color: white;
-            background: #f39c12;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .card-header .date {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-header .date i {
+            color: var(--light);
+        }
+
+        .card-header .type-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        /* Тело карточки */
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .card-body .title {
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.4;
+        }
+
+        .card-body .place {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        .card-body .place i {
+            color: var(--secondary);
+            width: 20px;
+        }
+
+        /* Нижняя часть карточки (статус + множитель) */
+        .card-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .status-badge {
             display: inline-block;
-            padding: 0.2rem 1rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .status-upcoming { background: #3498db; }
         .status-active { background: #27ae60; animation: blink 1.5s infinite; }
         .status-finished { background: #7f8c8d; }
+
         @keyframes blink {
             0%,100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.7; }
         }
 
-        /* ===== КОНТРАСТНЫЕ МОБИЛЬНЫЕ КАРТОЧКИ ===== */
-        .events-cards {
-            display: none; /* по умолчанию скрыты, покажутся на мобильных */
-        }
-
-        .event-card-mobile {
-            background: #1e2b38;  /* тёмно-синий фон */
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            border-left: 6px solid #3498db; /* яркая синяя полоса */
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            color: #f0f8ff;
-        }
-
-        .event-card-mobile::after {
-            content: '⛷️';
-            position: absolute;
-            bottom: -10px;
-            right: -10px;
-            font-size: 60px;
-            opacity: 0.1;
-            transform: rotate(-10deg);
-            pointer-events: none;
-        }
-
-        /* Цветовые акценты в зависимости от типа соревнования */
-        .event-card-mobile[data-type="cup"] { border-left-color: #f1c40f; }
-        .event-card-mobile[data-type="championship"] { border-left-color: #2ecc71; }
-        .event-card-mobile[data-type="marathon"] { border-left-color: #e67e22; }
-        .event-card-mobile[data-type="olympic"] { border-left-color: #3498db; }
-        .event-card-mobile[data-type="other"] { border-left-color: #95a5a6; }
-
-        /* Эффект при наведении / касании */
-        .event-card-mobile:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 30px rgba(52,152,219,0.3);
-            border-left-width: 8px;
-        }
-
-        /* Дата */
-        .event-card-mobile .date {
-            color: #ffd966; /* золотистый */
-            font-weight: 800;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Название */
-        .event-card-mobile .title {
-            font-weight: 700;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+        .multiplier-badge {
+            background: var(--gradient-warning);
             color: white;
-        }
-
-        /* Место */
-        .event-card-mobile .place {
-            color: #b0c4de;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .event-card-mobile .place::before {
-            content: '📍';
-            font-size: 1.1rem;
-        }
-
-        /* Контейнер для статуса и бейджа */
-        .event-card-mobile .status-wrapper {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 0.5rem;
-        }
-
-        /* Статус */
-        .event-card-mobile .status {
-            display: inline-block;
-            padding: 0.3rem 1.2rem;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: white;
-        }
-        .event-card-mobile .status.status-upcoming { background: #3498db; }
-        .event-card-mobile .status.status-active { background: #27ae60; animation: pulse 1.5s infinite; }
-        .event-card-mobile .status.status-finished { background: #7f8c8d; }
-
-        @keyframes pulse {
-            0%,100%{ opacity: 1; }
-            50%{ opacity: 0.7; box-shadow: 0 0 15px #27ae60; }
-        }
-
-        /* Бейдж множителя */
-        .event-card-mobile .badge.bg-warning {
-            background: #f39c12 !important;
-            color: #1e2b38 !important;
-            font-weight: 800;
             padding: 0.3rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
 
-        /* Адаптация под маленькие экраны */
-        @media (max-width: 480px) {
-            .event-card-mobile {
-                padding: 1.2rem;
-            }
-            .event-card-mobile .date {
-                font-size: 1.3rem;
-            }
-            .event-card-mobile .title {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Таймлайн */
+        /* === ТАЙМЛАЙН === */
         .timeline-section {
             margin-top: 4rem;
             background: white;
@@ -592,18 +468,18 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Анимация появления строк */
-        .table tbody tr {
-            animation: slideInRow 0.5s ease-out forwards;
+        /* Анимация появления карточек */
+        .event-card {
+            animation: cardAppear 0.5s ease-out forwards;
             opacity: 0;
         }
-        .table tbody tr:nth-child(1) { animation-delay: 0.1s; }
-        .table tbody tr:nth-child(2) { animation-delay: 0.2s; }
-        .table tbody tr:nth-child(3) { animation-delay: 0.3s; }
-        .table tbody tr:nth-child(4) { animation-delay: 0.4s; }
-        @keyframes slideInRow {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+        .event-card:nth-child(1) { animation-delay: 0.1s; }
+        .event-card:nth-child(2) { animation-delay: 0.2s; }
+        .event-card:nth-child(3) { animation-delay: 0.3s; }
+        .event-card:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Футер */
@@ -616,7 +492,7 @@
             overflow: hidden;
         }
         footer::before {
-            content: '';
+            content: '📅';
             position: absolute;
             right: 20px;
             bottom: 10px;
@@ -632,16 +508,11 @@
         }
 
         /* Адаптивность */
-        @media (max-width: 992px) {
-            .table thead th { padding: 1rem; font-size: 0.9rem; }
-            .table tbody tr td { padding: 1rem; font-size: 0.95rem; }
-        }
         @media (max-width: 768px) {
             header h1 { font-size: 2.5rem; }
-            .table-responsive { display: none; }
-            .events-cards { display: block; }
             .filters-bar { width: 100%; justify-content: center; }
             .filter-btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
+            .events-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -711,64 +582,38 @@
 
         <!-- Заголовок сезона -->
         <div class="season-title">
-            <h2>Сезон {{ games[0].date.split()[2] if games else '2025' }}</h2>
+            <h2>Сезон {{ games[0].date.split()[2] if games else '2026' }}</h2>
             <span class="season-badge">Актуально на {{ now.strftime('%d.%m.%Y') }}</span>
         </div>
 
-        <!-- Таблица для десктопа -->
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Соревнование</th>
-                        <th>Место проведения</th>
-                        <th>Статус</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for game in games %}
-                    <tr data-status="{{ game.status }}" data-type="{{ game.type }}" onclick="location.href='{{ url_for('event_comments', event_id=game.event_id) }}'">
-                        <td class="date-cell">{{ game.date }}</td>
-                        <td class="event-cell">
-                            {{ game.name }}
-                            {% if game.multiplier %}
-                                <span class="event-badge">x{{ game.multiplier }}</span>
-                            {% endif %}
-                        </td>
-                        <td class="place-cell">{{ game.place }}</td>
-                        <td class="comment-cell">
-                            <span class="status-badge status-{{ game.status }}">
-                                {% if game.status == 'upcoming' %}⏳ Ожидается
-                                {% elif game.status == 'active' %}🔥 Идёт сейчас
-                                {% else %}🏁 Завершено{% endif %}
-                            </span>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="4" class="text-center">Пока нет соревнований</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Карточки для мобильных -->
-        <div class="events-cards">
+        <!-- Сетка карточек -->
+        <div class="events-grid" id="eventsGrid">
             {% for game in games %}
-            <div class="event-card-mobile" data-status="{{ game.status }}" data-type="{{ game.type }}" onclick="location.href='{{ url_for('event_comments', event_id=game.event_id) }}'">
-                <div class="date">{{ game.date }}</div>
-                <div class="title">{{ game.name }}</div>
-                <div class="place">{{ game.place }}</div>
-                <div class="status-wrapper">
-                    <span class="status status-{{ game.status }}">
+            <div class="event-card" data-status="{{ game.status }}" data-type="{{ game.type }}" onclick="location.href='{{ url_for('event_comments', event_id=game.event_id) }}'">
+                <div class="card-header">
+                    <span class="date"><i class="far fa-calendar-alt"></i> {{ game.date }}</span>
+                    <span class="type-icon">
+                        {% if game.type == 'cup' %}🏆
+                        {% elif game.type == 'championship' %}🏅
+                        {% elif game.type == 'marathon' %}🏃
+                        {% elif game.type == 'olympic' %}⛷️
+                        {% else %}📌{% endif %}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h3 class="title">{{ game.name }}</h3>
+                    <div class="place">
+                        <i class="fas fa-map-marker-alt"></i> {{ game.place }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status-badge status-{{ game.status }}">
                         {% if game.status == 'upcoming' %}⏳ Ожидается
                         {% elif game.status == 'active' %}🔥 Идёт сейчас
                         {% else %}🏁 Завершено{% endif %}
                     </span>
                     {% if game.multiplier %}
-                        <span class="badge bg-warning text-dark">x{{ game.multiplier }}</span>
+                        <span class="multiplier-badge">x{{ game.multiplier }}</span>
                     {% endif %}
                 </div>
             </div>
@@ -800,7 +645,7 @@
             </div>
         </div>
 
-        <!-- Дополнительная информация (как на главной) -->
+        <!-- Дополнительная информация -->
         <div class="row mt-4">
             <div class="col-12">
                 <div class="info-card" style="background: white; border: 2px solid var(--secondary); border-radius: var(--border-radius); padding: 1.5rem; box-shadow: var(--shadow-md);">
@@ -825,24 +670,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function filterEvents(type) {
-            const rows = document.querySelectorAll('tbody tr');
-            const cards = document.querySelectorAll('.event-card-mobile');
+            const cards = document.querySelectorAll('.event-card');
             const buttons = document.querySelectorAll('.filter-btn');
 
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            rows.forEach(row => {
-                if (type === 'all' || row.dataset.type === type) {
-                    row.style.display = 'table-row';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
             cards.forEach(card => {
                 if (type === 'all' || card.dataset.type === type) {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }

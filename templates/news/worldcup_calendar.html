@@ -4,111 +4,200 @@
 
 {% block extra_css %}
 <style>
-    /* Те же стили, что в preparation.html */
+    /* Те же стили */
     .news-detail-body {
-        background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
         padding: 3rem 0;
+    }
+
+    .news-detail-body::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-50px) rotate(5deg); }
     }
 
     .news-detail-container {
         max-width: 900px;
         margin: 0 auto;
         padding: 0 20px;
+        position: relative;
+        z-index: 2;
     }
 
-    .back-link {
+    .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 2rem;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+
+    .breadcrumbs a {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .breadcrumbs a:hover {
+        color: #3498db;
+    }
+
+    .breadcrumbs .separator {
+        color: rgba(255,255,255,0.3);
+    }
+
+    .breadcrumbs .current {
+        color: #3498db;
+        font-weight: 600;
+    }
+
+    .back-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: var(--secondary);
-        font-weight: 600;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
         text-decoration: none;
+        font-weight: 600;
         margin-bottom: 2rem;
-        transition: all 0.3s;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255,255,255,0.2);
     }
 
-    .back-link:hover {
-        color: var(--accent);
+    .back-btn:hover {
+        background: #3498db;
+        border-color: #3498db;
         transform: translateX(-5px);
     }
 
-    .news-card-detail {
+    .news-detail-card {
         background: white;
         border-radius: 30px;
-        box-shadow: var(--shadow-lg);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         overflow: hidden;
-        border: 3px solid var(--secondary);
+        position: relative;
+        border: 3px solid #3498db;
         animation: cardAppear 0.6s ease-out;
     }
 
     @keyframes cardAppear {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    .news-header-image {
+    .news-detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #3498db, #e74c3c, #3498db);
+        background-size: 200% 100%;
+        animation: gradientMove 3s linear infinite;
+        z-index: 1;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
+    .news-detail-image {
         width: 100%;
         height: 400px;
         object-fit: cover;
-        border-bottom: 4px solid var(--secondary);
-        background-color: #e0e0e0;
+        border-bottom: 4px solid #3498db;
     }
 
-    .news-content {
+    .news-detail-content {
         padding: 2.5rem;
     }
 
-    .news-meta {
+    .news-detail-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e0e0e0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
         flex-wrap: wrap;
         gap: 1rem;
     }
 
-    .news-title {
+    .news-detail-title {
         font-size: 2.2rem;
         font-weight: 800;
-        color: var(--primary);
+        color: #2c3e50;
         margin: 0;
         line-height: 1.3;
     }
 
-    .news-date {
-        background: var(--gradient-primary);
+    .news-detail-date {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
         color: white;
         padding: 0.6rem 1.5rem;
         border-radius: 50px;
         font-weight: 700;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         gap: 8px;
-        box-shadow: var(--shadow-sm);
+        box-shadow: 0 5px 15px rgba(52,152,219,0.3);
     }
 
-    .news-text {
+    .news-detail-text {
         font-size: 1.1rem;
         line-height: 1.8;
         color: #2c3e50;
+        margin-bottom: 2rem;
     }
 
-    .news-text p {
+    .news-detail-text p {
         margin-bottom: 1.5rem;
     }
 
-    .news-text h3 {
+    .news-detail-text h3 {
         font-size: 1.5rem;
         font-weight: 700;
+        color: #2c3e50;
         margin: 2rem 0 1rem;
         padding-left: 1rem;
-        border-left: 5px solid var(--secondary);
+        border-left: 5px solid #3498db;
     }
 
-    .news-text ul {
-        margin-bottom: 1.5rem;
-        padding-left: 2rem;
+    .news-detail-text .highlight {
+        background: rgba(52,152,219,0.1);
+        padding: 1.5rem;
+        border-radius: 15px;
+        border-left: 5px solid #3498db;
+        font-weight: 500;
     }
 
     .news-tags {
@@ -125,18 +214,47 @@
         padding: 0.5rem 1.2rem;
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--primary);
-        transition: all 0.3s;
+        color: #2c3e50;
+        transition: all 0.3s ease;
     }
 
     .news-tag:hover {
-        border-color: var(--secondary);
+        border-color: #3498db;
         transform: translateY(-2px);
     }
 
     .news-tag i {
         margin-right: 5px;
-        color: var(--secondary);
+        color: #3498db;
+    }
+
+    .news-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e0e0e0;
+    }
+
+    .nav-btn {
+        background: white;
+        border: 2px solid #3498db;
+        color: #2c3e50;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        background: #3498db;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(52,152,219,0.3);
     }
 
     .related-news {
@@ -144,8 +262,8 @@
     }
 
     .related-title {
-        color: var(--primary);
-        font-size: 1.8rem;
+        color: white;
+        font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
         display: flex;
@@ -163,22 +281,20 @@
         background: white;
         border-radius: 15px;
         overflow: hidden;
-        border: 2px solid var(--secondary);
-        transition: all 0.3s;
+        border: 2px solid #3498db;
+        transition: all 0.3s ease;
         text-decoration: none;
-        color: inherit;
     }
 
     .related-item:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-md);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 30px rgba(0,0,0,0.3);
     }
 
     .related-image {
         width: 100%;
         height: 120px;
         object-fit: cover;
-        background-color: #e0e0e0;
     }
 
     .related-content {
@@ -186,6 +302,7 @@
     }
 
     .related-name {
+        color: #2c3e50;
         font-weight: 700;
         margin-bottom: 0.3rem;
     }
@@ -199,10 +316,31 @@
     }
 
     @media (max-width: 768px) {
-        .news-header-image { height: 250px; }
-        .news-content { padding: 1.8rem; }
-        .news-title { font-size: 1.8rem; }
-        .related-grid { grid-template-columns: 1fr; }
+        .news-detail-image {
+            height: 250px;
+        }
+
+        .news-detail-content {
+            padding: 1.8rem;
+        }
+
+        .news-detail-title {
+            font-size: 1.8rem;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .news-navigation {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 {% endblock %}
@@ -210,23 +348,34 @@
 {% block content %}
 <div class="news-detail-body">
     <div class="news-detail-container">
-        <a href="{{ url_for('index') }}#news" class="back-link">
+        <!-- Хлебные крошки -->
+        <div class="breadcrumbs">
+            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Главная</a>
+            <span class="separator">›</span>
+            <a href="{{ url_for('index') }}#news">Новости</a>
+            <span class="separator">›</span>
+            <span class="current">Кубок мира 2026/2027</span>
+        </div>
+
+        <!-- Кнопка назад -->
+        <a href="{{ url_for('index') }}#news" class="back-btn">
             <i class="fas fa-arrow-left"></i> Вернуться к новостям
         </a>
 
-        <div class="news-card-detail">
-            <img src="/static/images/news/worldcup.jpg" alt="Кубок мира 2026/2027" class="news-header-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'400\' viewBox=\'0 0 800 400\'%3E%3Crect width=\'800\' height=\'400\' fill=\'%23e0e0e0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Inter\' font-size=\'24\' fill=\'%237f8c8d\'%3EИзображение отсутствует%3C/text%3E%3C/svg%3E';">
+        <!-- Карточка новости -->
+        <div class="news-detail-card">
+            <img src="/static/images/news/worldcup.jpg" alt="Кубок мира 2026/2027" class="news-detail-image" onerror="this.onerror=null; this.src='/static/images/news/default.jpg'">
 
-            <div class="news-content">
-                <div class="news-meta">
-                    <h1 class="news-title">Этапы Кубка мира 2026/2027</h1>
-                    <div class="news-date">
+            <div class="news-detail-content">
+                <div class="news-detail-header">
+                    <h1 class="news-detail-title">Этапы Кубка мира 2026/2027</h1>
+                    <div class="news-detail-date">
                         <i class="fas fa-calendar-alt"></i> 2 мая 2026
                     </div>
                 </div>
 
-                <div class="news-text">
-                    <p class="highlight" style="background: rgba(52,152,219,0.1); padding: 1.5rem; border-radius: 15px; border-left: 5px solid #3498db;">
+                <div class="news-detail-text">
+                    <p class="highlight">
                         🌍 Международная федерация лыжного спорта (FIS) опубликовала предварительный календарь Кубка мира на сезон 2026/2027. Российские этапы пока остаются под вопросом.
                     </p>
 
@@ -240,16 +389,38 @@
                         <li><strong>8-9 января 2027:</strong> Валь-ди-Фьемме (Италия) – масс-старт</li>
                         <li><strong>16-17 января 2027:</strong> Нове-Место (Чехия) – разделка</li>
                         <li><strong>23-24 января 2027:</strong> Планица (Словения) – спринт</li>
+                        <li><strong>6-7 февраля 2027:</strong> Фалун (Швеция) – классика</li>
+                        <li><strong>13-14 февраля 2027:</strong> Лахти (Финляндия) – спринт, разделка</li>
+                        <li><strong>20-21 февраля 2027:</strong> Тронхейм (Норвегия) – масс-старт</li>
+                        <li><strong>6-7 марта 2027:</strong> Холменколлен (Норвегия) – классика</li>
                     </ul>
 
                     <h3>🇷🇺 Российские этапы</h3>
-                    <p>В календаре значатся два этапа в России: в Тюмени (февраль 2027) и в Малиновке (март 2027). Однако их проведение будет зависеть от решений FIS и политической ситуации. Следите за обновлениями.</p>
+                    <p>
+                        В календаре значатся два этапа в России: в Тюмени (февраль 2027) и в Малиновке (март 2027). Однако их проведение будет зависеть от решений FIS и политической ситуации. Следите за обновлениями.
+                    </p>
+
+                    <h3>⭐ Фавориты сезона</h3>
+                    <p>
+                        Александр Большунов, Юлия Ступак, норвежец Йоханнес Клебо и шведка Фрида Карлссон продолжат борьбу за Большой хрустальный глобус. Также ожидается возвращение после травм ряда сильных спортсменов, что сделает борьбу ещё интереснее.
+                    </p>
                 </div>
 
+                <!-- Теги -->
                 <div class="news-tags">
                     <span class="news-tag"><i class="fas fa-tag"></i> Кубок мира</span>
                     <span class="news-tag"><i class="fas fa-tag"></i> Календарь</span>
                     <span class="news-tag"><i class="fas fa-tag"></i> 2026/2027</span>
+                </div>
+
+                <!-- Навигация между новостями -->
+                <div class="news-navigation">
+                    <a href="{{ url_for('news_spring_starts') }}" class="nav-btn prev">
+                        <i class="fas fa-arrow-left"></i> Весенние старты
+                    </a>
+                    <a href="{{ url_for('news_world_championship_2027') }}" class="nav-btn next">
+                        ЧМ 2027 <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -259,23 +430,23 @@
             <h3 class="related-title"><i class="fas fa-newspaper"></i> Другие новости</h3>
             <div class="related-grid">
                 <a href="{{ url_for('news_preparation') }}" class="related-item">
-                    <img src="/static/images/news/season-prep.jpg" alt="Подготовка" class="related-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'120\' viewBox=\'0 0 200 120\'%3E%3Crect width=\'200\' height=\'120\' fill=\'%23e0e0e0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Inter\' font-size=\'14\' fill=\'%237f8c8d\'%3EНет фото%3C/text%3E%3C/svg%3E';">
+                    <img src="/static/images/news/season-prep.jpg" alt="Подготовка" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
                         <div class="related-name">Подготовка к сезону</div>
                         <div class="related-date"><i class="fas fa-calendar-alt"></i> 15 марта 2026</div>
                     </div>
                 </a>
-                <a href="{{ url_for('news_olympics') }}" class="related-item">
-                    <img src="/static/images/news/olympics.jpg" alt="Олимпиада" class="related-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'120\' viewBox=\'0 0 200 120\'%3E%3Crect width=\'200\' height=\'120\' fill=\'%23e0e0e0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Inter\' font-size=\'14\' fill=\'%237f8c8d\'%3EНет фото%3C/text%3E%3C/svg%3E';">
+                <a href="{{ url_for('news_spring_starts') }}" class="related-item">
+                    <img src="/static/images/news/spring.jpg" alt="Весенние старты" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
-                        <div class="related-name">Цель — Олимпиада</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 5 марта 2026</div>
+                        <div class="related-name">Весенние старты</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 20 апреля 2026</div>
                     </div>
                 </a>
                 <a href="{{ url_for('news_world_championship_2027') }}" class="related-item">
-                    <img src="/static/images/news/future.jpg" alt="ЧМ 2027" class="related-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'120\' viewBox=\'0 0 200 120\'%3E%3Crect width=\'200\' height=\'120\' fill=\'%23e0e0e0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Inter\' font-size=\'14\' fill=\'%237f8c8d\'%3EНет фото%3C/text%3E%3C/svg%3E';">
+                    <img src="/static/images/news/future.jpg" alt="ЧМ 2027" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
-                        <div class="related-name">ЧМ 2027: детали</div>
+                        <div class="related-name">ЧМ 2027</div>
                         <div class="related-date"><i class="fas fa-calendar-alt"></i> 15 января 2027</div>
                     </div>
                 </a>

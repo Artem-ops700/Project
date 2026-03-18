@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Те же стили, что в предыдущих файлах */
+    /* Те же стили, что в preparation.html */
     .news-detail-body {
         background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
         min-height: 100vh;
@@ -364,13 +364,13 @@
 
         <!-- Карточка новости -->
         <div class="news-detail-card">
-            <img src="/static/images/news/olympics.jpg" alt="Цель — Олимпиада" class="news-detail-image">
+            <img src="/static/images/news/olympics.jpg" alt="Цель — Олимпиада" class="news-detail-image" onerror="this.onerror=null; this.src='/static/images/news/default.jpg'">
 
             <div class="news-detail-content">
                 <div class="news-detail-header">
                     <h1 class="news-detail-title">Цель — Олимпиада 2026</h1>
                     <div class="news-detail-date">
-                        <i class="fas fa-calendar-alt"></i> 15 декабря 2024
+                        <i class="fas fa-calendar-alt"></i> 5 марта 2026
                     </div>
                 </div>
 
@@ -380,35 +380,24 @@
                     </p>
 
                     <h3>📊 План подготовки</h3>
-                    <p>
-                        Стратегия подготовки к Олимпиаде включает несколько ключевых этапов:
-                    </p>
+                    <p>Стратегия подготовки к Олимпиаде включает несколько ключевых этапов:</p>
                     <ul>
-                        <li><strong>2026 год:</strong> Базовая подготовка, участие в Кубке мира</li>
-                        <li><strong>2026 год:</strong> Чемпионат мира в Тронхейме (отбор)</li>
+                        <li><strong>2024 год:</strong> Базовая подготовка, участие в Кубке мира</li>
+                        <li><strong>2025 год:</strong> Чемпионат мира в Тронхейме (отбор)</li>
                         <li><strong>2026 год:</strong> Олимпийские игры в Италии</li>
                     </ul>
 
                     <h3>🇮🇹 Олимпиада-2026</h3>
-                    <p>
-                        Зимние Олимпийские игры пройдут в Италии, в городах Милан и Кортина-д'Ампеццо с 6 по 22 февраля 2026 года. Лыжные гонки будут проходить в Валь-ди-Фьемме, где уже сейчас строятся новые трассы мирового уровня.
-                    </p>
+                    <p>Зимние Олимпийские игры пройдут в Италии, в городах Милан и Кортина-д'Ампеццо с 6 по 22 февраля 2026 года. Лыжные гонки будут проходить в Валь-ди-Фьемме, где уже сейчас строятся новые трассы мирового уровня.</p>
 
                     <h3>🎯 Целевые дисциплины</h3>
-                    <p>
-                        Тренерский штаб выделяет несколько дисциплин, в которых сборная России будет бороться за медали:
-                    </p>
+                    <p>Тренерский штаб выделяет несколько дисциплин, в которых сборная России будет бороться за медали:</p>
                     <ul>
                         <li>Спринт (мужчины и женщины)</li>
                         <li>Эстафета 4×10 км (мужчины)</li>
                         <li>Скиатлон</li>
                         <li>Командный спринт</li>
                     </ul>
-
-                    <h3>📈 Текущая ситуация</h3>
-                    <p>
-                        В настоящий момент команда находится на сборах в Тюмени. Проводятся контрольные тренировки, тестирование функционального состояния. Лидеры команды демонстрируют готовность к выполнению олимпийских нормативов.
-                    </p>
                 </div>
 
                 <!-- Теги -->
@@ -424,8 +413,8 @@
                     <a href="{{ url_for('news_juniors') }}" class="nav-btn prev">
                         <i class="fas fa-arrow-left"></i> Юниоры дебютируют
                     </a>
-                    <a href="#" class="nav-btn next disabled">
-                        Следующая новость <i class="fas fa-arrow-right"></i>
+                    <a href="{{ url_for('news_spring_starts') }}" class="nav-btn next">
+                        Весенние старты <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -436,24 +425,24 @@
             <h3 class="related-title"><i class="fas fa-newspaper"></i> Другие новости</h3>
             <div class="related-grid">
                 <a href="{{ url_for('news_preparation') }}" class="related-item">
-                    <img src="/static/images/news/season-prep.jpg" alt="Подготовка" class="related-image">
+                    <img src="/static/images/news/season-prep.jpg" alt="Подготовка" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
                         <div class="related-name">Подготовка к сезону</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 20 декабря</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 15 марта 2026</div>
                     </div>
                 </a>
                 <a href="{{ url_for('news_juniors') }}" class="related-item">
-                    <img src="/static/images/news/juniors.jpg" alt="Юниоры" class="related-image">
+                    <img src="/static/images/news/juniors.jpg" alt="Юниоры" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
                         <div class="related-name">Юниоры дебютируют</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 18 декабря</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 10 марта 2026</div>
                     </div>
                 </a>
-                <a href="#" class="related-item">
-                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200" alt="Олимпиада" class="related-image">
+                <a href="{{ url_for('news_spring_starts') }}" class="related-item">
+                    <img src="/static/images/news/spring.jpg" alt="Весенние старты" class="related-image" onerror="this.src='/static/images/news/default.jpg'">
                     <div class="related-content">
-                        <div class="related-name">История Олимпиад</div>
-                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 5 декабря</div>
+                        <div class="related-name">Весенние старты</div>
+                        <div class="related-date"><i class="fas fa-calendar-alt"></i> 20 апреля 2026</div>
                     </div>
                 </a>
             </div>
