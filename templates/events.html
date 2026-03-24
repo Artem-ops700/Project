@@ -10,19 +10,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* === ОБЩИЕ ПЕРЕМЕННЫЕ (как на главной) === */
+        /* === ПОЛНОСТЬЮ КОПИРУЕМ СТИЛИ ИЗ team.html === */
         :root {
             --primary: #2c3e50;
             --secondary: #3498db;
             --accent: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
+            --accent-hover: #c0392b;
             --light: #ecf0f1;
             --dark: #1a252f;
-            --gradient-primary: linear-gradient(135deg, #2c3e50, #3498db);
+            --gray: #95a5a6;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --gradient-men: linear-gradient(135deg, #2c3e50, #3498db);
+            --gradient-women: linear-gradient(135deg, #8e44ad, #3498db);
             --gradient-accent: linear-gradient(135deg, #e74c3c, #c0392b);
-            --gradient-success: linear-gradient(135deg, #27ae60, #229954);
-            --gradient-warning: linear-gradient(135deg, #f39c12, #e67e22);
             --gradient-dark: linear-gradient(135deg, #1a252f, #2c3e50);
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -40,12 +41,11 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
             color: var(--primary);
-            line-height: 1.6;
             min-height: 100vh;
             position: relative;
         }
 
-        /* Декоративный фон (как на главной) */
+        /* Декоративный фон */
         body::before {
             content: '';
             position: fixed;
@@ -59,7 +59,7 @@
             z-index: -1;
         }
 
-        /* === ШАПКА === */
+        /* Хедер с эффектом */
         header {
             background: var(--gradient-dark);
             padding: 4rem 0 !important;
@@ -96,6 +96,7 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-30px) rotate(5deg); }
         }
+
         @keyframes slide {
             0% { left: -100px; }
             100% { left: 100%; }
@@ -130,14 +131,7 @@
             50% { width: 180px; opacity: 0.7; }
         }
 
-        header .lead {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            max-width: 700px;
-            margin: 1.5rem auto 0;
-        }
-
-        /* === СТАТИСТИКА === */
+        /* Статистика над карточками */
         .events-stats {
             background: white;
             border-radius: var(--border-radius);
@@ -154,18 +148,6 @@
         .stat-item {
             text-align: center;
             padding: 0.5rem 1.5rem;
-            position: relative;
-        }
-
-        .stat-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 2px;
-            height: 40px;
-            background: linear-gradient(to bottom, transparent, var(--secondary), transparent);
         }
 
         .stat-number {
@@ -177,201 +159,155 @@
 
         .stat-label {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: var(--gray);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* === ФИЛЬТРЫ === */
+        /* ФИЛЬТРЫ - стилизованы как кнопки-переключатели */
         .filters-bar {
-            background: white;
-            border-radius: 50px;
-            padding: 0.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-sm);
-            border: 2px solid var(--secondary);
-            display: inline-flex;
+            display: flex;
+            justify-content: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
         }
 
         .filter-btn {
-            border: none;
-            background: transparent;
-            padding: 0.8rem 1.8rem;
+            background: white;
+            border: 2px solid var(--secondary);
+            padding: 0.6rem 1.5rem;
             border-radius: 50px;
             font-weight: 600;
             color: var(--primary);
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn i {
+            margin-right: 5px;
         }
 
         .filter-btn:hover {
-            background: rgba(52,152,219,0.1);
+            background: var(--secondary);
+            color: white;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .filter-btn.active {
-            background: var(--gradient-primary);
+            background: var(--gradient-men);
             color: white;
+            border-color: var(--secondary);
+            transform: scale(1.05);
             box-shadow: var(--shadow-md);
         }
 
-        /* === ЗАГОЛОВОК СЕЗОНА === */
-        .season-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .season-title h2 {
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 2.2rem;
-            margin: 0;
+        /* Карточка соревнования - полностью повторяет стиль team-card */
+        .event-card {
+            border: none;
+            border-radius: var(--border-radius);
+            background: white;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
             position: relative;
-            padding-left: 20px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
         }
 
-        .season-title h2::before {
+        .event-card::before {
             content: '';
             position: absolute;
-            left: 0;
             top: 0;
-            bottom: 0;
-            width: 5px;
-            background: var(--gradient-primary);
-            border-radius: 3px;
-        }
-
-        .season-badge {
-            background: var(--gradient-accent);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: var(--shadow-md);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* === СЕТКА КАРТОЧЕК === */
-        .events-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .event-card {
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            border: 2px solid transparent;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-men);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
         .event-card:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--secondary);
         }
 
-        /* Верхняя часть карточки с датой и иконкой */
-        .card-header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid var(--secondary);
+        .event-card:hover::before {
+            transform: scaleX(1);
         }
 
-        .card-header .date {
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-header .date i {
-            color: var(--light);
-        }
-
-        .card-header .type-icon {
-            font-size: 1.8rem;
-            line-height: 1;
-        }
-
-        /* Тело карточки */
-        .card-body {
+        .event-card .card-body {
             padding: 1.5rem;
-            flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
-        .card-body .title {
+        /* Заголовок карточки */
+        .event-card .card-title {
             font-weight: 800;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            line-height: 1.4;
-        }
-
-        .card-body .place {
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            opacity: 0.8;
+            gap: 10px;
+            color: var(--primary);
         }
-        .card-body .place i {
+
+        .event-card .card-title i {
             color: var(--secondary);
+            font-size: 1.6rem;
+        }
+
+        /* Информация о соревновании */
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #5d6d7e;
+            font-size: 0.9rem;
+        }
+
+        .event-meta i {
+            color: var(--secondary);
+            margin-right: 5px;
             width: 20px;
         }
 
-        /* Нижняя часть карточки (статус + множитель) */
-        .card-footer {
-            padding: 1rem 1.5rem 1.5rem;
-            background: white;
-            border-top: 1px solid #e0e0e0;
+        /* Статус и множитель */
+        .event-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e0e0e0;
         }
 
         .status-badge {
-            display: inline-block;
             padding: 0.4rem 1.2rem;
             border-radius: 50px;
-            font-size: 0.85rem;
             font-weight: 700;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 0.8rem;
         }
-        .status-upcoming { background: #3498db; }
-        .status-active { background: #27ae60; animation: blink 1.5s infinite; }
-        .status-finished { background: #7f8c8d; }
 
-        @keyframes blink {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .status-upcoming {
+            background: #e1f0fa;
+            color: var(--secondary);
+        }
+
+        .status-active {
+            background: #fee2dd;
+            color: var(--accent);
+            animation: pulse 1.2s infinite;
+        }
+
+        .status-finished {
+            background: #e9ecef;
+            color: #7f8c8d;
         }
 
         .multiplier-badge {
@@ -379,16 +315,41 @@
             color: white;
             padding: 0.3rem 1rem;
             border-radius: 50px;
-            font-size: 0.85rem;
             font-weight: 700;
+            font-size: 0.8rem;
         }
 
-        /* === ТАЙМЛАЙН === */
+        .countdown {
+            background: #f0f4f9;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .live-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; background: #fcd5ce; color: #2c3e50; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Секция таймлайна - как дополнительный блок */
         .timeline-section {
-            margin-top: 4rem;
+            margin-top: 3rem;
             background: white;
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 1.8rem;
             box-shadow: var(--shadow-md);
             border: 2px solid var(--secondary);
         }
@@ -396,76 +357,91 @@
         .timeline-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 2rem;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
         }
 
         .timeline-title h3 {
             font-weight: 800;
-            color: var(--primary);
             margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .timeline-title i {
             font-size: 1.8rem;
+            color: var(--secondary);
         }
 
         .timeline {
             position: relative;
-            padding-left: 40px;
+            padding-left: 30px;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 15px;
+            left: 8px;
             top: 0;
             bottom: 0;
-            width: 4px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .timeline-item:hover {
-            transform: translateX(10px);
-            box-shadow: var(--shadow-md);
+            margin-bottom: 1.2rem;
+            padding-left: 0.8rem;
         }
 
         .timeline-marker {
             position: absolute;
-            left: -55px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            left: -21px;
+            top: 0;
+            width: 20px;
+            height: 20px;
             background: white;
-            border: 4px solid var(--secondary);
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
             color: var(--secondary);
-            font-weight: 800;
-            font-size: 1.2rem;
-            box-shadow: var(--shadow-sm);
         }
 
         .timeline-date {
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--accent);
-            margin-bottom: 0.5rem;
         }
 
         .timeline-content h4 {
+            font-size: 0.95rem;
             font-weight: 700;
+            margin: 0;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            font-size: 0.8rem;
+            color: #5d6d7e;
+            margin: 0;
+        }
+
+        /* Инфо-блок */
+        .info-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.2rem 1.8rem;
+            margin-top: 2rem;
+            border: 2px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         /* Анимация появления карточек */
@@ -473,13 +449,22 @@
             animation: cardAppear 0.5s ease-out forwards;
             opacity: 0;
         }
+
         .event-card:nth-child(1) { animation-delay: 0.1s; }
         .event-card:nth-child(2) { animation-delay: 0.2s; }
         .event-card:nth-child(3) { animation-delay: 0.3s; }
         .event-card:nth-child(4) { animation-delay: 0.4s; }
+        .event-card:nth-child(5) { animation-delay: 0.5s; }
+
         @keyframes cardAppear {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Футер */
@@ -491,8 +476,9 @@
             position: relative;
             overflow: hidden;
         }
+
         footer::before {
-            content: '📅';
+            content: '🏆';
             position: absolute;
             right: 20px;
             bottom: 10px;
@@ -500,8 +486,9 @@
             opacity: 0.1;
             transform: rotate(15deg);
         }
+
         footer small {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 1rem;
             font-weight: 500;
             letter-spacing: 1px;
@@ -509,10 +496,40 @@
 
         /* Адаптивность */
         @media (max-width: 768px) {
-            header h1 { font-size: 2.5rem; }
-            .filters-bar { width: 100%; justify-content: center; }
-            .filter-btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
-            .events-grid { grid-template-columns: 1fr; }
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .card-body {
+                padding: 1.2rem;
+            }
+
+            .event-card .card-title {
+                font-size: 1.2rem;
+            }
+
+            .events-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .event-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .event-meta {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
         }
     </style>
 </head>
@@ -543,7 +560,7 @@
     <header class="py-5">
         <div class="container text-center">
             <h1 class="fw-bold">Календарь соревнований</h1>
-            <p class="lead">Все предстоящие старты • Кубки • Чемпионаты • Олимпиада</p>
+            <p class="lead text-white-50">Следи за расписанием, делай прогнозы и поднимайся в рейтинге</p>
         </div>
     </header>
 
@@ -552,83 +569,79 @@
         <div class="events-stats">
             <div class="stat-item">
                 <div class="stat-number">{{ games|length }}</div>
-                <div class="stat-label">Всего стартов</div>
+                <div class="stat-label">Всего</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">{{ games|selectattr('status', 'equalto', 'upcoming')|list|length }}</div>
-                <div class="stat-label">Предстоящих</div>
+                <div class="stat-label">Предстоят</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">{{ games|selectattr('status', 'equalto', 'active')|list|length }}</div>
                 <div class="stat-label">Идут сейчас</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number">{{ games|selectattr('status', 'equalto', 'finished')|list|length }}</div>
-                <div class="stat-label">Завершено</div>
-            </div>
         </div>
 
-        <!-- Фильтры по типу -->
-        <div class="d-flex justify-content-center">
-            <div class="filters-bar">
-                <button class="filter-btn active" onclick="filterEvents('all')">Все</button>
-                <button class="filter-btn" onclick="filterEvents('cup')">🏆 Кубки</button>
-                <button class="filter-btn" onclick="filterEvents('championship')">🏅 Чемпионаты</button>
-                <button class="filter-btn" onclick="filterEvents('marathon')">🏃 Марафоны</button>
-                <button class="filter-btn" onclick="filterEvents('olympic')">⛷️ Олимпиада</button>
-                <button class="filter-btn" onclick="filterEvents('other')">📌 Другое</button>
-            </div>
+        <!-- Фильтры -->
+        <div class="filters-bar">
+            <button class="filter-btn active" onclick="filterEvents('all')"><i class="fas fa-flag-checkered"></i> Все</button>
+            <button class="filter-btn" onclick="filterEvents('cup')"><i class="fas fa-trophy"></i> Кубки</button>
+            <button class="filter-btn" onclick="filterEvents('championship')"><i class="fas fa-medal"></i> Чемпионаты</button>
+            <button class="filter-btn" onclick="filterEvents('marathon')"><i class="fas fa-running"></i> Марафоны</button>
+            <button class="filter-btn" onclick="filterEvents('olympic')"><i class="fas fa-fire"></i> Олимпиада</button>
+            <button class="filter-btn" onclick="filterEvents('other')"><i class="fas fa-calendar-week"></i> Другое</button>
         </div>
 
-        <!-- Заголовок сезона -->
-        <div class="season-title">
-            <h2>Сезон {{ games[0].date.split()[2] if games else '2026' }}</h2>
-            <span class="season-badge">Актуально на {{ now.strftime('%d.%m.%Y') }}</span>
-        </div>
-
-        <!-- Сетка карточек -->
-        <div class="events-grid" id="eventsGrid">
+        <!-- Список соревнований (карточки, как в team.html) -->
+        <div id="eventsList">
             {% for game in games %}
             <div class="event-card" data-status="{{ game.status }}" data-type="{{ game.type }}" onclick="location.href='{{ url_for('event_comments', event_id=game.event_id) }}'">
-                <div class="card-header">
-                    <span class="date"><i class="far fa-calendar-alt"></i> {{ game.date }}</span>
-                    <span class="type-icon">
-                        {% if game.type == 'cup' %}🏆
-                        {% elif game.type == 'championship' %}🏅
-                        {% elif game.type == 'marathon' %}🏃
-                        {% elif game.type == 'olympic' %}⛷️
-                        {% else %}📌{% endif %}
-                    </span>
-                </div>
                 <div class="card-body">
-                    <h3 class="title">{{ game.name }}</h3>
-                    <div class="place">
-                        <i class="fas fa-map-marker-alt"></i> {{ game.place }}
+                    <div class="card-title">
+                        <i class="fas {% if game.type == 'cup' %}fa-trophy{% elif game.type == 'championship' %}fa-medal{% elif game.type == 'marathon' %}fa-running{% elif game.type == 'olympic' %}fa-fire{% else %}fa-calendar-week{% endif %}"></i>
+                        {{ game.name }}
                     </div>
-                </div>
-                <div class="card-footer">
-                    <span class="status-badge status-{{ game.status }}">
-                        {% if game.status == 'upcoming' %}⏳ Ожидается
-                        {% elif game.status == 'active' %}🔥 Идёт сейчас
-                        {% else %}🏁 Завершено{% endif %}
-                    </span>
-                    {% if game.multiplier %}
-                        <span class="multiplier-badge">x{{ game.multiplier }}</span>
-                    {% endif %}
+                    <div class="event-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ game.date }}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> {{ game.place }}</span>
+                    </div>
+                    <div class="event-footer">
+                        <div>
+                            <span class="status-badge status-{{ game.status }}">
+                                {% if game.status == 'upcoming' %}<i class="far fa-clock"></i> Ожидается
+                                {% elif game.status == 'active' %}<i class="fas fa-play"></i> Идёт сейчас
+                                {% else %}<i class="fas fa-check-circle"></i> Завершено
+                                {% endif %}
+                            </span>
+                            {% if game.multiplier and game.multiplier > 1 %}
+                                <span class="multiplier-badge ms-2">x{{ game.multiplier }}</span>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if game.status == 'upcoming' %}
+                                <span class="countdown" data-date="{{ game.date }}"></span>
+                            {% elif game.status == 'active' %}
+                                <span class="live-badge"><i class="fas fa-circle" style="font-size: 8px; margin-right: 5px;"></i> LIVE</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
             {% else %}
-            <p class="text-center">Пока нет соревнований</p>
+            <div class="text-center py-5">
+                <i class="fas fa-skiing fa-3x mb-3 text-secondary"></i>
+                <h4>Пока нет соревнований</h4>
+                <p class="text-muted">Скоро здесь появятся новые старты</p>
+            </div>
             {% endfor %}
         </div>
 
         <!-- Таймлайн ближайших стартов -->
         <div class="timeline-section">
             <div class="timeline-title">
+                <i class="fas fa-calendar-week"></i>
                 <h3>Ближайшие старты</h3>
                 <span class="badge bg-primary">{{ games|selectattr('status', 'in', ['upcoming','active'])|list|length }}</span>
             </div>
-
             <div class="timeline">
                 {% for game in games if game.status in ['upcoming', 'active'] %}
                 <div class="timeline-item">
@@ -640,31 +653,22 @@
                     </div>
                 </div>
                 {% else %}
-                <p>Нет ближайших стартов</p>
+                <p class="text-muted text-center">Нет ближайших стартов</p>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Дополнительная информация -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="info-card" style="background: white; border: 2px solid var(--secondary); border-radius: var(--border-radius); padding: 1.5rem; box-shadow: var(--shadow-md);">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h5 class="card-title text-primary mb-3">📢 Важная информация</h5>
-                            <p class="mb-0">Расписание может меняться. Следите за обновлениями в официальных источниках.</p>
-                        </div>
-                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            <span class="badge bg-danger p-3">#ВперёдРоссия</span>
-                        </div>
-                    </div>
-                </div>
+        <div class="info-card">
+            <div>
+                <i class="fas fa-info-circle me-2 text-primary"></i> <strong>Важно:</strong> Расписание может меняться. Следите за обновлениями в официальных источниках.
             </div>
+            <span class="badge bg-danger px-3 py-2">#ВперёдРоссия</span>
         </div>
     </main>
 
     <footer class="text-white text-center py-3">
-        <small>© 2025 Лыжные гонки • Календарь соревнований • Следите за обновлениями</small>
+        <small>© 2026 Лыжные гонки • Актуальный календарь соревнований</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -672,36 +676,46 @@
         function filterEvents(type) {
             const cards = document.querySelectorAll('.event-card');
             const buttons = document.querySelectorAll('.filter-btn');
-
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            event.target.closest('.filter-btn').classList.add('active');
 
             cards.forEach(card => {
                 if (type === 'all' || card.dataset.type === type) {
-                    card.style.display = 'flex';
+                    card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
             });
         }
 
-        // Анимация таймлайна
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateX(0)';
+        function updateCountdowns() {
+            const months = {
+                'января':0,'февраля':1,'марта':2,'апреля':3,'мая':4,'июня':5,
+                'июля':6,'августа':7,'сентября':8,'октября':9,'ноября':10,'декабря':11
+            };
+            document.querySelectorAll('.countdown').forEach(el => {
+                const dateStr = el.getAttribute('data-date');
+                if (!dateStr) return;
+                const parts = dateStr.split(' ');
+                if (parts.length < 3) return;
+                const day = parseInt(parts[0]);
+                const month = months[parts[1].toLowerCase()];
+                const year = parseInt(parts[2]);
+                const eventDate = new Date(year, month, day);
+                const now = new Date();
+                const diff = eventDate - now;
+                if (diff <= 0) {
+                    el.textContent = 'Старт!';
+                    return;
                 }
+                const days = Math.floor(diff / (1000*3600*24));
+                const hours = Math.floor((diff % (86400000)) / (3600000));
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                el.textContent = `${days}д ${hours}ч ${minutes}м`;
             });
-        }, { threshold: 0.5 });
-
-        timelineItems.forEach(item => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateX(-20px)';
-            item.style.transition = 'all 0.5s ease';
-            observer.observe(item);
-        });
+        }
+        updateCountdowns();
+        setInterval(updateCountdowns, 60000);
     </script>
 </body>
 </html>

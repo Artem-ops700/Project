@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Выбор аватара — Лыжные гонки{% endblock %}
+
+{% block extra_css %}
+<style>
+    .avatars-body {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
+
+    .avatars-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .current-avatar-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        border: 3px solid #3498db;
+    }
+
+    .current-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #3498db;
+        margin: 0 auto 1rem;
+        display: block;
+    }
+
+    .current-avatar-emoji {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+    }
+
+    .avatar-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 2px solid #e0e0e0;
+    }
+
+    .avatar-section h3 {
+        color: #2c3e50;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .avatars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .avatar-card {
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid #e0e0e0;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+    }
+
+    .avatar-card:hover {
+        transform: translateY(-5px);
+        border-color: #3498db;
+        box-shadow: 0 10px 25px rgba(52,152,219,0.2);
+    }
+
+    .avatar-card.selected {
+        border-color: #27ae60;
+        background: linear-gradient(135deg, #f0f9f0, #e8f5e9);
+    }
+
+    .avatar-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 0.8rem;
+        border: 3px solid #3498db;
+        display: block;
+    }
+
+    .avatar-emoji {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        background: linear-gradient(135deg, #f8fafc, #e9ecef);
+        border: 3px solid #3498db;
+    }
+
+    .avatar-name {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 0.9rem;
+    }
+
+    .avatar-badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        background: #e0e0e0;
+        color: #7f8c8d;
+        margin-top: 0.5rem;
+    }
+
+    .category-legend {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        color: white;
+        font-size: 0.8rem;
+        margin-left: 1rem;
+    }
+
+    .category-legend { border-top: 4px solid #e74c3c; }
+    .category-star { border-top: 4px solid #f39c12; }
+    .category-promising { border-top: 4px solid #27ae60; }
+    .category-rising { border-top: 4px solid #3498db; }
+    .category-fan { border-top: 4px solid #95a5a6; }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background: #3498db;
+        transform: translateX(-5px);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .avatars-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .avatar-image, .avatar-emoji {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+        }
+
+        .avatar-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="avatars-body">
+    <div class="avatars-container">
+        <a href="{{ url_for('profile') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Вернуться в профиль
+        </a>
+
+        <div class="current-avatar-card">
+            <h3><i class="fas fa-user-circle"></i> Ваш текущий аватар</h3>
+            {% if current_avatar[2] %}
+                <img src="{{ current_avatar[2] }}" alt="{{ current_avatar[1] }}" class="current-avatar" onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.current-avatar-emoji').style.display='flex';">
+                <div class="current-avatar-emoji" style="display: none;">{{ current_avatar[3] }}</div>
+            {% else %}
+                <div class="current-avatar-emoji">{{ current_avatar[3] }}</div>
+            {% endif %}
+            <h4 style="margin-top: 1rem;">{{ current_avatar[1] }}</h4>
+            <p class="text-muted">Выберите нового героя, чтобы изменить аватар</p>
+        </div>
+
+        {% for category, avatars_list in avatars.items() %}
+        <div class="avatar-section category-{{ category }}">
+            <h3>
+                {% if category == 'legend' %}
+                    <i class="fas fa-crown" style="color: #f39c12;"></i> Легенды лыжных гонок
+                {% elif category == 'star' %}
+                    <i class="fas fa-star" style="color: #f39c12;"></i> Звёзды сборной
+                {% elif category == 'promising' %}
+                    <i class="fas fa-chart-line" style="color: #27ae60;"></i> Перспективные
+                {% elif category == 'rising' %}
+                    <i class="fas fa-rocket" style="color: #3498db;"></i> Восходящие звёзды
+                {% else %}
+                    <i class="fas fa-users" style="color: #95a5a6;"></i> Болельщики
+                {% endif %}
+                <span class="category-legend">{{ avatars_list|length }} аватаров</span>
+            </h3>
+
+            <div class="avatars-grid">
+                {% for avatar in avatars_list %}
+                <a href="{{ url_for('set_avatar', avatar_id=avatar[0]) }}" class="avatar-card {% if current_avatar[0] == avatar[0] %}selected{% endif %}">
+                    {% if avatar[2] %}
+                        <img src="{{ avatar[2] }}" alt="{{ avatar[1] }}" class="avatar-image" onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.avatar-emoji').style.display='flex';">
+                        <div class="avatar-emoji" style="display: none;">{{ avatar[3] }}</div>
+                    {% else %}
+                        <div class="avatar-emoji">{{ avatar[3] }}</div>
+                    {% endif %}
+                    <div class="avatar-name">{{ avatar[1] }}</div>
+                    {% if current_avatar[0] == avatar[0] %}
+                        <span class="avatar-badge" style="background: #27ae60; color: white;">✓ Выбран</span>
+                    {% else %}
+                        <span class="avatar-badge">Выбрать</span>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

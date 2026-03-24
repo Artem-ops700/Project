@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article[2] }} — Лыжные гонки{% endblock %}
+
+{% block extra_css %}
+<style>
+    .article-body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 3rem 0;
+    }
+    .article-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        border: 2px solid #3498db;
+        padding: 2rem;
+    }
+    .article-header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 1rem;
+    }
+    .article-header h1 {
+        color: #2c3e50;
+        font-weight: 800;
+    }
+    .article-meta {
+        color: #7f8c8d;
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+    .article-content {
+        line-height: 1.8;
+        color: #2c3e50;
+    }
+    .article-content img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin: 1rem 0;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #3498db;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="article-body">
+    <div class="container">
+        <div class="article-container">
+            <a href="javascript:history.back()" class="back-link">
+                <i class="fas fa-arrow-left"></i> Назад
+            </a>
+
+            <div class="article-header">
+                <h1>{{ article[2] }}</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-user"></i> {{ article[6] }}</span>
+                    <span><i class="far fa-calendar-alt"></i> {{ article[7][:10] }}</span>
+                    {% if article[8] %}<span class="badge bg-warning">Интервью</span>{% endif %}
+                </div>
+            </div>
+
+            {% if article[5] %}
+                <img src="{{ url_for('static', filename='images/' + article[5]) }}" class="img-fluid mb-4" alt="{{ article[2] }}">
+            {% endif %}
+
+            <div class="article-content">
+                {{ article[3]|replace('\n', '<br>')|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
