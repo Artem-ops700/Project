@@ -10,6 +10,46 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+/* Фоновое видео — без изменений */
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Оверлей затемнения (можешь оставить или убрать, если нужно) */
+.bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* ГРАДИЕНТНОЕ ЗАТУХАНИЕ ВНИЗУ — сделаем выше и плотнее */
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;           /* увеличил высоту */
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.2) 70%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ТЕНЬ ВНУТРИ — дополнительно скрывает край, если градиент не справляется */
+header {
+    box-shadow: inset 0 -50px 30px -30px rgba(0,0,0,0.6);
+}
+
     /* === СТИЛЬ ГЛАВНОЙ С ПЕРЕЛИВАЮЩИМСЯ ТЕКСТОМ (БЕСКОНЕЧНО ПЛАВНО) === */
     :root {
         --primary: #2c3e50;
@@ -556,15 +596,19 @@
     </div>
   </nav>
 
-  <header class="py-5">
-    <div class="container text-center">
-      <h1 class="fw-bold">Лыжные гонки: коротко и просто</h1>
-      <p class="lead">Свежие новости, актуальный состав сборной и календарь ближайших стартов. Всё о российских лыжниках в одном месте!</p>
-      <a class="btn btn-primary" href="{{ url_for('events') }}">
-        <span>📅 Смотреть календарь</span>
-      </a>
+  <header class="py-5 position-relative overflow-hidden">
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="{{ url_for('static', filename='videos/skiing-bg.mp4') }}" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+    <div class="container text-center position-relative z-2">
+        <h1 class="fw-bold">Лыжные гонки: коротко и просто</h1>
+        <p class="lead">Свежие новости, актуальный состав сборной и календарь ближайших стартов. Всё о российских лыжниках в одном месте!</p>
+        <a class="btn btn-primary" href="{{ url_for('events') }}">
+            <span>📅 Смотреть календарь</span>
+        </a>
     </div>
-  </header>
+</header>
 
   <!-- Карусель с фокусом (6 новостей) -->
   <main class="container py-5">

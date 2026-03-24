@@ -1780,4 +1780,4 @@ if __name__ == '__main__':
     print("📅 Соревнования (динамические): http://127.0.0.1:5010/events.html")
     print("=" * 60)
 
-    app.run(debug=True, port=5010)
+    app.run(debug=True, port
